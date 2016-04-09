@@ -1,0 +1,136 @@
+abajo de body
+<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+    <ul class="nav navbar-nav">
+      <li ng-show="isLoggedIn()"><a>{{ currentUser() }}</a></li>
+      <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+      <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+      <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+    </ul>
+  </nav>
+
+
+
+  state provider
+
+  .state('posts', {
+      url: '/posts/{id}',
+      templateUrl: '/posts.html',
+      controller: 'PostsCtrl',
+      resolve: {
+        post: ['$stateParams','posts',function($stateParams,posts){
+          return posts.get($stateParams.id);
+        }
+        ]
+      }
+    })
+    .state('login', {
+      url: '/login',
+      templateUrl: '/login.html',
+      controller: 'AuthCtrl',
+      onEnter: ['$state', 'auth', function($state, auth){
+        if(auth.isLoggedIn()){
+          $state.go('home');
+        }
+      }]
+    })
+    .state('register', {
+      url: '/register',
+      templateUrl: '/register.html',
+      controller: 'AuthCtrl',
+      onEnter: ['$state', 'auth', function($state, auth){
+        if(auth.isLoggedIn()){
+          $state.go('home');
+        }
+      }]
+    });
+
+
+    dentro del repeat
+
+    <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(post)"></span>
+        {{post.upvotes}}
+        <span style="font-size:20px; margin-left:10px;">
+          <a ng-show="post.link" href="{{post.link}}">
+            {{post.title}}
+          </a>
+          <span ng-hide="post.link">
+            {{post.title}}
+          </span>
+        </span>
+
+         <span am-time-ago="post.date"></span>
+        
+        <span>
+      	  <a href="#/posts/{{post._id}}">({{post.comments.length}}) Comments</a>
+      	</span>
+
+        <span ng-show="post.author">
+          posted by <a>{{post.author}}</a> |
+        </span>
+
+
+<div class="row">
+        Ordenar por: 
+        <button class="btn btn-primary" ng-click="orden='-date'">Fecha</button>
+        <button class="btn btn-primary" ng-click="orden='+title'">Contenido</button>
+        <button class="btn btn-primary" ng-click="orden='-upvotes'">Me gusta</button>
+      </div>
+
+
+
+abajo de todo
+
+<div ng-hide="isLoggedIn()">
+        <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+      </div>
+
+
+factory
+
+o.create = function(post) {
+    return $http.post('/posts', post, {
+      headers: {Authorization: 'Bearer ' + auth.getToken()}
+    }).success(function(data){
+      o.posts.push(data);
+    });
+  };
+
+  o.upvote = function(post) {
+    return $http.put('/posts/' + post._id + '/upvote', null, {
+      headers: {Authorization: 'Bearer ' + auth.getToken()}
+    })
+      .success(function(data){
+        post.upvotes += 1;
+      });
+  };
+
+  o.get = function(id) {
+    return $http.get('/posts/' + id).then(function(res){
+      return res.data;
+    });
+  };
+
+  o.addComment = function(id, comment) {
+    return $http.post('/posts/' + id + '/comments', comment, {
+      headers: {Authorization: 'Bearer ' + auth.getToken()}
+    });
+  };
+
+  o.upvoteComment = function(post, comment) {
+    return $http.put('/posts/' + post._id + '/comments/'+ comment._id + '/upvote', null, {
+      headers: {Authorization: 'Bearer ' + auth.getToken()}
+    })
+      .success(function(data){
+        comment.upvotes += 1;
+      });
+  };
+
+
+
+
+
+  dentro de crearIdea
+
+  {
+      headers: {Authorization: 'Bearer ' + auth.getToken()}
+    }
