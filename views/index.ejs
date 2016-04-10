@@ -26,9 +26,9 @@
         {{idea.titulo}}
         
         <span style="font-size:15px; margin-left:20px;">
-          <a> Detalles </a>
+          <a style="cursor: pointer;"> Detalles </a>
         </span>
-        <span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        <span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea()"></span>
       </div>
 
       <form ng-submit="agregarIdea()" style="margin-top:30px;">

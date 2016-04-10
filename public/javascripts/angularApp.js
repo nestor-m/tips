@@ -42,6 +42,10 @@ app.factory('ideasFactory', ['$http', 'auth', function($http,auth)
     });
   };
 
+  o.eliminarIdea = function(idea){
+    return $http.delete('/ideas', idea);
+  }
+
   return o;
 }]);
 
@@ -69,6 +73,12 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', function($scope,ide
     $scope.title = '';
     $scope.detalle = '';
   };
+
+
+  $scope.eliminarIdea = function(idea){
+    ideasFactory.eliminar(idea);
+  };
+
 }]);
 
 
