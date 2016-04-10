@@ -7,11 +7,11 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlR
       url: '/home',
       templateUrl: '/home.html',
       controller: 'MainCtrl',
-      //resolve: {
-      //  ideas:  ['ideas', function(ideas){
-      //    return ideas.obtenerIdeas();
-       //}]
-     //}
+      resolve: {
+        ideas:  ['ideasFactory', function(ideasFactory){
+          return ideasFactory.obtenerIdeas();
+        }]
+      }
     })
 
   $urlRouterProvider.otherwise('home');

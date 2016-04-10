@@ -4,6 +4,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
+var Comment = mongoose.model('Idea');
 
 var passport = require('passport');
 var User = mongoose.model('User');
@@ -20,11 +21,11 @@ router.get('/', function(req, res, next) {
 
 
 
-router.get('/posts', function(req, res, next) {
-  Post.find(function(err, posts){
+router.get('/ideas', function(req, res, next) {
+  Idea.find(function(err, ideas){
     if(err){ return next(err); }
 
-    res.json(posts);
+    res.json(ideas);
   });
 });
 
