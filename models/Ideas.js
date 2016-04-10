@@ -5,4 +5,4 @@ var IdeaSchema = new mongoose.Schema({
 	detalle: String
 });
 
-mongoose.model('Idea', PostSchema);
+mongoose.model('Idea', IdeaSchema);

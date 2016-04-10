@@ -1,14 +1,16 @@
 var mongoose = require('mongoose');
 var passport = require('passport');
+
+/*
 require('./models/Posts');
 require('./models/Comments');
 require('./models/Users');
 require('./config/passport');
+*/
 
+require('./models/Ideas');
 
-mongoose.connect('mongodb://localhost/news');
-
-
+mongoose.connect('mongodb://localhost/IdeasTIP');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -17,7 +19,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+
+//var users = require('./routes/users');
 
 var app = express();
 
@@ -35,7 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/', routes);
-app.use('/users', users);
+
+//app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

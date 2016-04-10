@@ -64,8 +64,10 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', function($scope,ide
     if(!$scope.titulo || $scope.titulo === '') { return; }
     ideasFactory.crearIdea({
       titulo: $scope.titulo,
+      detalle: $scope.detalle
     });
     $scope.title = '';
+    $scope.detalle = '';
   };
 }]);
 
