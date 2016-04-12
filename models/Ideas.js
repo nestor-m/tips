@@ -10,9 +10,10 @@ const ELIMINADA = 'ELIMINADA';
 var IdeaSchema = new mongoose.Schema({
   titulo: String,
   descripcion: String,
-  autor: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' },
+  autor: String,
   fecha: { type: Date, default: Date.now },
-  estado: { type: String, default: DISPONIBLE }
+  estado: { type: String, default: DISPONIBLE },
+  postulante: String
 });
 
 /*IdeaSchema.methods.findNoEliminadas = function (cb) {
@@ -21,6 +22,23 @@ var IdeaSchema = new mongoose.Schema({
 
 IdeaSchema.methods.eliminar = function (cb) {
   this.estado = ELIMINADA;
+  this.save(cb);
+}
+
+IdeaSchema.methods.postular = function (nombreAlumno,cb) {
+  this.postulante = nombreAlumno;
+  this.estado = REVISION;
+  this.save(cb);
+}
+
+IdeaSchema.methods.aceptarPostulacion = function (cb) {
+  this.estado = ACEPTADA;
+  this.save(cb);
+}
+
+IdeaSchema.methods.rechazarPostulacion = function (cb) {
+  this.estado = DISPONIBLE;
+  this.postulante = null;
   this.save(cb);
 }
 
