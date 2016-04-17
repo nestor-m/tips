@@ -1,4 +1,4 @@
-var app = angular.module('ideasTIP', ['ui.router','angularMoment']);
+var app = angular.module('ideasTIP', ['ui.bootstrap','ui.router','angularMoment']);
 
 app.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlRouterProvider) 
 {
@@ -31,7 +31,7 @@ app.factory('ideasFactory', ['$http', 'auth', function($http,auth)
   };
 
   o.obtenerIdeas = function() {
-    return $http.get('/ideas').success(function(data){
+    return $http.get('/ideasNoEliminadas').success(function(data){
       angular.copy(data, o.ideas);
     });
   };
@@ -49,7 +49,7 @@ app.factory('ideasFactory', ['$http', 'auth', function($http,auth)
   return o;
 }]);
 
-app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', function($scope,ideasFactory,auth)
+app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', '$modal', function($scope,ideasFactory,auth,$modal)
 { 
   //$scope.isLoggedIn = auth.isLoggedIn;
 
@@ -77,6 +77,18 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', function($scope,ide
 
   $scope.eliminarIdea = function(idea){
     ideasFactory.eliminar(idea);
+  };
+
+  $scope.abrirDetalles = function(){
+    $modal.open({
+      templateUrl: 'detallesModal.html',
+      controller: 'MainCtrl'
+
+    });
+
+  $scope.cerrar = function(){
+    $modal.close()
+  };
   };
 
 }]);
