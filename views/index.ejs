@@ -35,7 +35,10 @@
         <span style="font-size:15px; margin-left:20px;">
           <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
         </span>
-        <a><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
+        <a ng-hide="usuario.rol == 'DOCENTE'"><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
+        <span style="font-size:15px; margin-left:20px;">
+          <button ng-click="postularseA(idea)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
+        </span>
       </div>
 
       <form ng-submit="agregarIdea()" style="margin-top:30px;" ng-show="usuario.rol == 'DOCENTE'">
@@ -51,11 +54,17 @@
             <textarea name="detalleText" cols="40" rows="5"
                class="form-control"
               placeholder="detalles de la idea"
-              ng-model="detalle"></textarea>
+              ng-model="descripcion"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Crear Idea</button>
-      </form>      
+      </form>
+      <br>
+      <span style="font-size:15px; margin-left:20px;">
+        <button ng-click = "verActividades()" class="btn btn-primary">Ver Actividades</button>
+        <button ng-show="usuario.rol == 'DIRECTOR'" ng-click = "verTareasPendientes()" class="btn btn-primary">Ver tareas pendientes</button>
+      </span>
     </script>
+
     <script type="text/ng-template" id='detallesModal.html'>
       <div class="modal-header">
             <h3 class="modal-title">Detalles de : {{titulo}}!</h3>
@@ -69,6 +78,41 @@
             <button class="btn btn-warning" type="button" ng-click="cerrar()">Cerrar</button>
         </div>
     </script>
+
+    <script type="text/ng-template" id='tareasPendientesModal.html'>
+      <div class="modal-header">
+            <h3 class="modal-title">Tareas Pendientes</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <div ng-repeat="tarea in tareasPendientes">
+                  <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea}} , hora : {{actividad.date}} </span>
+                  <button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
+                  <button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
+                </div>
+            </ul>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-warning" type="button" ng-click="cerrar()">cerrar</button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id='actividadesModal.html'>
+      <div class="modal-header">
+            <h3 class="modal-title">Actividades</h3>
+        </div>
+
+        <div class="modal-body">
+            {{actividades}}
+            <div ng-repeat="actividad in actividades">
+              <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea}} , hora : {{actividad.date}} </span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" ng-click="cerrar()">Cerrar</button>
+        </div>
+    </script>
+
     <script type="text/ng-template" id="/register.html">
   <div class="page-header">
     <h1>Flapper News</h1>

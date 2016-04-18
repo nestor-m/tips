@@ -108,6 +108,18 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,auth)
     });
   };
 
+  o.obtenerActividades = function() {
+    return $http.get('/actividades',{headers: {Authorization: 'Bearer '+auth.getToken()}}).then(function(response){
+      return response.body; 
+    });
+  };
+
+  o.obtenerTareasPendientes = function(){
+    return $http.get('/ideas/estado/revision', {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(data){
+      return data.body;
+    });
+  }
+
   o.crearIdea = function(ideaJson) {
     return $http.post('/ideas', ideaJson, {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(data){
       o.ideas.push(data);
@@ -116,6 +128,24 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,auth)
 
   o.eliminar = function(idea){
     return $http.put('/ideas/' + idea._id +  '/eliminar', {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(res){
+      console.log(res.body);
+    });
+  };
+
+  o.postularse = function(idea){
+    return $http.put('/ideas/'+ idea._id + '/postular', {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(res){
+      console.log(res.body);
+    });
+  };
+
+  o.aceptarTarea = function(tarea){
+    return $http.put('/ideas/' + tarea._id + '/aceptar', {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(res){
+      console.log(res.body);
+    });
+  };
+
+  o.rechazarTarea = function(tarea){
+    return $http.put('/ideas/' + tarea._id + '/rechazar', {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(res){
       console.log(res.body);
     });
   };
@@ -142,10 +172,10 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'authFactory', '$modal', fu
     if(!$scope.titulo || $scope.titulo === '') { return; }
     ideasFactory.crearIdea({
       titulo: $scope.titulo,
-      detalle: $scope.detalle
+      descripcion: $scope.descripcion
     });
     $scope.titulo = '';
-    $scope.detalle = '';
+    $scope.descripcion = '';
   };
 
 
@@ -153,11 +183,17 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'authFactory', '$modal', fu
     ideasFactory.eliminar(idea);
   };
 
+  $scope.postularseA = function(idea){
+    ideasFactory.postularse(idea);
+  };
+
   $scope.abrirDetalles = function(idea){
     console.log('titulo: ', idea.titulo);
+    console.log('descripcion: ', idea.descripcion);
     $scope.modalInstance= $modal.open({
       templateUrl: 'detallesModal.html',
       scope: $scope,
+      controller: 'MainCtrl',
       resolve: {
         titulo: function () {
           return idea.titulo;
@@ -166,11 +202,49 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'authFactory', '$modal', fu
     });
   };
 
+  $scope.verActividades = function(){
+    $scope.modalInstance= $modal.open({
+      templateUrl: 'actividadesModal.html',
+      scope: $scope,
+      controller: 'actividadesCTRL'
+    });
+  };
+
+  $scope.verTareasPendientes = function(){
+    $scope.modalInstance= $modal.open({
+      templateUrl: 'tareasPendientesModal.html',
+      scope: $scope,
+      controller: 'actividadesCTRL'
+    });
+  };
+
   $scope.cerrar=function(){
     $scope.modalInstance.close();
   };
 
 }]);
+
+
+app.controller('actividadesCTRL', ['$scope','$state','ideasFactory', function($scope, $state, ideasFactory){
+
+  $scope.actividades = ideasFactory.obtenerActividades();
+
+  $scope.tareasPendientes = ideasFactory.obtenerTareasPendientes();
+
+  console.log($scope.actividades);
+
+  $scope.cerrar=function(){
+    $scope.modalInstance.close();
+  };
+
+  $scope.aceptarTarea = function(tarea){
+    ideasFactory.aceptarTarea(tarea);
+  };
+
+  $scope.rechazarTarea = function(tarea){
+    ideasFactory.rechazarTarea(tarea);
+  };
+}])
 
 
 app.controller('AuthCtrl', ['$scope','$state','authFactory', function($scope, $state, authFactory){
