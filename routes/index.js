@@ -219,8 +219,8 @@ router.put('/ideas/:idea/rechazar', auth, function(req, res, next)
 //REGISTRO de nuevos usuarios
 //ejemplo JSON: {"usuario":"director","password":"director","rol":"DIRECTOR"}
 router.post('/registro', function(req, res, next){
-  if(!req.body.usuario || !req.body.password){
-    return res.status(400).json({message: 'Please fill out all fields'});
+  if(!req.body.usuario || !req.body.password || !req.body.rol){
+    return res.status(400).json({message: 'Por favor llenar todos los campos'});
   }
 
   var rol = req.body.rol;

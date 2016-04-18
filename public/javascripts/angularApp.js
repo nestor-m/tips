@@ -13,11 +13,83 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlR
         }]
       }
     })
+    .state('login', {
+      url: '/login',
+      templateUrl: '/login.html',
+      controller: 'AuthCtrl',
+      onEnter: ['$state', 'authFactory', function($state, authFactory){
+        if(authFactory.isLoggedIn()){
+          $state.go('home');
+        }
+      }]
+    })
+    .state('register', {
+      url: '/register',
+      templateUrl: '/register.html',
+      controller: 'AuthCtrl',
+      onEnter: ['$state', 'authFactory', function($state, authFactory){
+        if(authFactory.isLoggedIn()){
+          $state.go('home');
+        }
+      }]
+    });
 
-  $urlRouterProvider.otherwise('home');
+    $urlRouterProvider.otherwise('home');
 }]);
 
-app.factory('ideasFactory', ['$http', 'auth', function($http,auth)
+app.factory('authFactory', ['$http', '$window', function($http, $window){
+  var auth = {};
+
+  auth.saveToken = function (token){
+    $window.localStorage['user-token'] = token;
+  };
+
+  auth.getToken = function (){
+    return $window.localStorage['user-token'];
+  }
+
+  auth.isLoggedIn = function(){
+    var token = auth.getToken();
+
+    if(token){
+      var payload = JSON.parse($window.atob(token.split('.')[1]));
+      return payload.exp > Date.now() / 1000;
+    } else {
+      return false;
+    }
+  };
+
+  auth.currentUser = function(){
+    if(auth.isLoggedIn()){
+      var token = auth.getToken();
+      var payload = JSON.parse($window.atob(token.split('.')[1]));
+      return payload;
+    }
+  };
+
+
+
+  auth.logIn = function(user){
+    return $http.post('/login', user).success(function(data){
+      auth.saveToken(data.token);
+    });
+  };
+
+  auth.register = function(user){
+    return $http.post('/registro', user).success(function(data){
+      auth.saveToken(data.token);
+    });
+  };
+
+  auth.logOut = function(){
+    $window.localStorage.removeItem('user-token');
+  };
+
+  return auth;
+}]);
+
+
+app.factory('ideasFactory', ['$http', 'authFactory', function($http,auth)
 {
 
   var o = {
@@ -31,30 +103,32 @@ app.factory('ideasFactory', ['$http', 'auth', function($http,auth)
   };
 
   o.obtenerIdeas = function() {
-    return $http.get('/ideasNoEliminadas').success(function(data){
+    return $http.get('/ideas',{headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(data){
       angular.copy(data, o.ideas);
     });
   };
 
   o.crearIdea = function(ideaJson) {
-    return $http.post('/ideas', ideaJson).success(function(data){
+    return $http.post('/ideas', ideaJson, {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(data){
       o.ideas.push(data);
     });
   };
 
-  o.eliminarIdea = function(idea){
-    return $http.delete('/ideas', idea);
-  }
+  o.eliminar = function(idea){
+    return $http.put('/ideas/' + idea._id +  '/eliminar', {headers: {Authorization: 'Bearer '+auth.getToken()}}).success(function(res){
+      console.log(res.body);
+    });
+  };
 
   return o;
 }]);
 
-app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', '$modal', function($scope,ideasFactory,auth,$modal)
+app.controller('MainCtrl', ['$scope','ideasFactory', 'authFactory', '$modal', function($scope,ideasFactory,authFactory,$modal)
 { 
   //$scope.isLoggedIn = auth.isLoggedIn;
 
   $scope.ideas = ideasFactory.ideas;
-  
+  $scope.usuario = authFactory.currentUser();
   
 //   $scope.posts = [
 //     {title: 'post 1', upvotes: 5},    
@@ -70,7 +144,7 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', '$modal', function(
       titulo: $scope.titulo,
       detalle: $scope.detalle
     });
-    $scope.title = '';
+    $scope.titulo = '';
     $scope.detalle = '';
   };
 
@@ -79,116 +153,33 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'auth', '$modal', function(
     ideasFactory.eliminar(idea);
   };
 
-  $scope.abrirDetalles = function(){
-    $modal.open({
+  $scope.abrirDetalles = function(idea){
+    console.log('titulo: ', idea.titulo);
+    $scope.modalInstance= $modal.open({
       templateUrl: 'detallesModal.html',
-      controller: 'MainCtrl'
-
+      scope: $scope,
+      resolve: {
+        titulo: function () {
+          return idea.titulo;
+        }
+      }
     });
-
-  $scope.cerrar = function(){
-    $modal.close()
   };
+
+  $scope.cerrar=function(){
+    $scope.modalInstance.close();
   };
 
 }]);
 
 
+app.controller('AuthCtrl', ['$scope','$state','authFactory', function($scope, $state, authFactory){
+  $scope.usuario = {};
 
+  $scope.rolesPosibles = ["DIRECTOR", "DOCENTE", "ALUMNO"];
 
-
-
-
-
-
-
-
-
-
-
-app.controller('PostsCtrl', ['$scope', 'posts', 'post', 'auth',function($scope, posts, post, auth)
-{
-  $scope.isLoggedIn = auth.isLoggedIn;
-
-  $scope.post = post;
-  
-  $scope.addComment = function(){
-    if($scope.body === '') { return; }
-    posts.addComment(post._id, {
-      body: $scope.body,
-      author: 'user',
-    }).success(function(comment) {
-      $scope.post.comments.push(comment);
-    });
-    $scope.body = '';
-  };
-
-  $scope.incrementUpvotes = function(comment){
-    posts.upvoteComment(post, comment);
-  };
-  
-}]);
-
-
-//Authentication
-app.factory('auth', ['$http', '$window', function($http, $window){  
-  var auth = {};
-
-  auth.saveToken = function (token){
-    $window.localStorage['flapper-news-token'] = token;
-  };
-
-  auth.getToken = function (){
-    return $window.localStorage['flapper-news-token'];
-  }
-
-  auth.isLoggedIn = function(){
-    var token = auth.getToken();
-
-    if(token){
-      var payload = JSON.parse($window.atob(token.split('.')[1]));
-
-      return payload.exp > Date.now() / 1000;
-    } else {
-      return false;
-    }
-  };
-
-  auth.currentUser = function(){
-    if(auth.isLoggedIn()){
-      var token = auth.getToken();
-      var payload = JSON.parse($window.atob(token.split('.')[1]));
-
-      return payload.username;
-    }
-  };
-
-  auth.register = function(user){
-    return $http.post('/register', user).success(function(data){
-      auth.saveToken(data.token);
-    });
-  };
-
-  auth.logIn = function(user){
-    return $http.post('/login', user).success(function(data){
-      auth.saveToken(data.token);
-    });
-  };
-
-  auth.logOut = function(){
-    $window.localStorage.removeItem('flapper-news-token');
-  };
-
-  return auth;
-}]);
-
-//authentication controller
-app.controller('AuthCtrl', ['$scope', '$state', 'auth', function($scope, $state, auth)
-{
-  $scope.user = {};
-
-  $scope.register = function(){
-    auth.register($scope.user).error(function(error){
+  $scope.registrarUsuario = function(){
+    authFactory.register($scope.usuario).error(function(error){
       $scope.error = error;
     }).then(function(){
       $state.go('home');
@@ -196,19 +187,18 @@ app.controller('AuthCtrl', ['$scope', '$state', 'auth', function($scope, $state,
   };
 
   $scope.logIn = function(){
-    auth.logIn($scope.user).error(function(error){
+    authFactory.logIn($scope.usuario).error(function(error){
       $scope.error = error;
     }).then(function(){
       $state.go('home');
     });
   };
-}]);
+}])
 
 
-app.controller('NavCtrl', ['$scope', 'auth', function($scope, auth)
+app.controller('NavCtrl', ['$scope', 'authFactory', function($scope, authFactory)
 {
-  $scope.isLoggedIn = auth.isLoggedIn;
-  $scope.currentUser = auth.currentUser;
-  $scope.logOut = auth.logOut;
+  $scope.isLoggedIn = authFactory.isLoggedIn;
+  $scope.currentUser = authFactory.currentUser;
+  $scope.logOut = authFactory.logOut;
 }]);
-

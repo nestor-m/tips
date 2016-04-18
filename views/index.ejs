@@ -11,6 +11,14 @@
    <!-- <style> .glyphicon-thumbs-up { cursor:pointer } </style>-->
   </head>
   <body ng-app="ideasTIP">
+    <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+      <ul class="nav navbar-nav">
+        <li ng-show="isLoggedIn()"><a>{{ currentUser().usuario }}</a></li>
+        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+      </ul>
+    </nav>
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <ui-view></ui-view>
@@ -22,17 +30,15 @@
       <div class="page-header">
         <h1>TIPS</h1>
       </div>
-
       <div ng-repeat="idea in ideas">
         {{idea.titulo}}
-        
         <span style="font-size:15px; margin-left:20px;">
-          <a style="cursor: pointer;" ng-click="abrirDetalles()"> Detalles </a>
+          <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
         </span>
-        <span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea()"></span>
+        <a><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
       </div>
 
-      <form ng-submit="agregarIdea()" style="margin-top:30px;">
+      <form ng-submit="agregarIdea()" style="margin-top:30px;" ng-show="usuario.rol == 'DOCENTE'">
         <h3>Agregar una nueva idea</h3>
 
         <div class="form-group">
@@ -56,103 +62,41 @@
         </div>
         <div class="modal-body">
             <ul>
-                <{{detalle}}
+                
             </ul>
         </div>
         <div class="modal-footer">
             <button class="btn btn-warning" type="button" ng-click="cerrar()">Cerrar</button>
         </div>
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <script type="text/ng-template" id="/posts.html">
-  <div class="page-header">
-    <h3>
-      <a ng-show="post.link" href="{{post.link}}">
-        {{post.title}}
-      </a>
-      <span ng-hide="post.link">
-        {{post.title}}
-      </span>
-    </h3>
-  </div>
-
-  <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
-    <span class="glyphicon glyphicon-thumbs-up"
-      ng-click="incrementUpvotes(comment)"></span>
-    {{comment.upvotes}} - by {{comment.author}}
-    <span style="font-size:20px; margin-left:10px;">
-      {{comment.body}}
-    </span>
-  </div>
-  
-  <form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top:30px;">
-    <h3>Add a new comment</h3>
-
-    <div class="form-group">
-      <input type="text"
-      class="form-control"
-      placeholder="Comment"
-      ng-model="body"></input>
-    </div>
-    <button type="submit" class="btn btn-primary">Post</button>
-  </form>
-
-  <div ng-hide="isLoggedIn()">
-    <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can comment.</h3>
-  </div>
-
-  <a class="btn btn-default" href="/#/home">Back to Posts</a>
-  
-  </script>
-  
-  <!-- REGISTRATION TEMPLATE -->
-  <script type="text/ng-template" id="/register.html">
-    <div class="page-header">
-      <h1>Flapper News</h1>
-    </div>
-
-    <div ng-show="error" class="alert alert-danger row">
-      <span>{{ error.message }}</span>
-    </div>
-
-    <form ng-submit="register()"
-      style="margin-top:30px;">
-      <h3>Register</h3>
-
-      <div class="form-group">
-        <input type="text"
-        class="form-control"
-        placeholder="Username"
-        ng-model="user.username"></input>
-      </div>
-      <div class="form-group">
-        <input type="password"
-        class="form-control"
-        placeholder="Password"
-        ng-model="user.password"></input>
-      </div>
-      <button type="submit" class="btn btn-primary">Register</button>
-    </form>
-  </script>
-
-<!-- LOGIN TEMPLATE -->
-<script type="text/ng-template" id="/login.html">
+    <script type="text/ng-template" id="/register.html">
   <div class="page-header">
     <h1>Flapper News</h1>
+  </div>
+
+  <div ng-show="error" class="alert alert-danger row">
+    <span>{{ error.message }}</span>
+  </div>
+
+  <form ng-submit="registrarUsuario()" style="margin-top:30px;">
+    <h3>Registrar usuario</h3>
+
+    <div class="form-group"> 
+      <input type="text" class="form-control" placeholder="Nombre de usuario" ng-model="usuario.usuario"></input>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" placeholder="Password" ng-model="usuario.password"></input>
+    </div>
+    <div class="form-group">
+      <select ng-options="x for x in rolesPosibles" ng-model="usuario.rol"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar</button>
+  </form>
+</script>
+<script type="text/ng-template" id="/login.html">
+  <div class="page-header">
+    <h1>TIPS</h1>
   </div>
 
   <div ng-show="error" class="alert alert-danger row">
@@ -164,22 +108,13 @@
     <h3>Log In</h3>
 
     <div class="form-group">
-      <input type="text"
-      class="form-control"
-      placeholder="Username"
-      ng-model="user.username"></input>
+      <input type="text" class="form-control" placeholder="Nombre de usuario" ng-model="usuario.usuario"></input>
     </div>
     <div class="form-group">
-      <input type="password"
-      class="form-control"
-      placeholder="Password"
-      ng-model="user.password"></input>
+      <input type="password" class="form-control" placeholder="Password" ng-model="usuario.password"></input>
     </div>
     <button type="submit" class="btn btn-primary">Log In</button>
   </form>
-</script>
-
-  
-
-</body>
+  </script>
+  </body>
 </html>
