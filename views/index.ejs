@@ -35,7 +35,7 @@
         <span style="font-size:15px; margin-left:20px;">
           <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
         </span>
-        <a ng-hide="usuario.rol == 'DOCENTE'"><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
+        <a><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
         <span style="font-size:15px; margin-left:20px;">
           <button ng-click="postularseA(idea)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
         </span>
@@ -67,11 +67,11 @@
 
     <script type="text/ng-template" id='detallesModal.html'>
       <div class="modal-header">
-            <h3 class="modal-title">Detalles de : {{titulo}}!</h3>
+            <h3 class="modal-title">Detalles de : {{tituloIdea}}!</h3>
         </div>
         <div class="modal-body">
             <ul>
-                
+                {{descripcionIdea}}
             </ul>
         </div>
         <div class="modal-footer">
@@ -86,7 +86,7 @@
         <div class="modal-body">
             <ul>
                 <div ng-repeat="tarea in tareasPendientes">
-                  <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea}} , hora : {{actividad.date}} </span>
+                  <span> Autor : {{tarea.autor}} , Accion : {{tarea.accion}} , idea: {{tarea.idea}} , hora : {{tarea.date}} </span>
                   <button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
                   <button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
                 </div>
@@ -103,8 +103,8 @@
         </div>
 
         <div class="modal-body">
-            {{actividades}}
             <div ng-repeat="actividad in actividades">
+              {{actividad}}
               <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea}} , hora : {{actividad.date}} </span>
             </div>
         </div>
