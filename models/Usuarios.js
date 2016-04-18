@@ -30,7 +30,8 @@ UsuarioSchema.methods.generateJWT = function() {
 
   return jwt.sign({
     _id: this._id,
-    username: this.nombre,
+    usuario: this.nombre,
+    rol: this.rol,
     exp: parseInt(exp.getTime() / 1000),
   }, 'SECRET');
 };

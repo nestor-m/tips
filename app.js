@@ -1,12 +1,11 @@
 var mongoose = require('mongoose');
-//var passport = require('passport');
+var passport = require('passport');
 
 require('./models/Ideas');
-//require('./models/IdeaEstados');
 require('./models/Usuarios');
-//require('./models/Roles');
+require('./models/Actividades');
 
-//require('./config/passport');
+require('./config/passport');
 
 
 mongoose.connect('mongodb://localhost/tips');
