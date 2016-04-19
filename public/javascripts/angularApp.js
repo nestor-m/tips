@@ -109,15 +109,11 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
   };
 
   o.obtenerActividades = function() {
-    return $http.get('/actividades',{headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(data){
-      return data.body; 
-    });
+    return $http.get('/actividades',{headers: {Authorization: 'Bearer '+authFactory.getToken()}});
   };
 
   o.obtenerTareasPendientes = function(){
-    return $http.get('/ideas/estado/revision', {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(data){
-      return data.body;
-    });
+    return $http.get('/ideas/estado/revision', {headers: {Authorization: 'Bearer '+authFactory.getToken()}});
   }
 
   o.crearIdea = function(ideaJson) {
@@ -127,26 +123,28 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
   };
 
   o.eliminar = function(idea){
-    return $http.put('/ideas/' + idea._id +  '/eliminar' , {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
+    return $http.put('/ideas/' + idea._id +  '/eliminar' , null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
       console.log(res.body);
     });
   };
 
   o.postularse = function(idea){
-    return $http.put('/ideas/'+ idea._id + '/postular', {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
-      console.log(res.body);
-    });
+    return $http.put('/ideas/'+ idea._id + '/postular', null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).
+        then(function(response) {
+          return "CORRECTO";
+        }, function(response) {
+          return "PROBLEMA";
+      });
   };
 
   o.aceptarTarea = function(tarea){
-    return $http.put('/ideas/' + tarea._id + '/aceptar', {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
+    return $http.put('/ideas/' + tarea._id + '/aceptar', null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
       console.log(res.body);
-      ideasFactory.eliminar(tarea);
     });
   };
 
   o.rechazarTarea = function(tarea){
-    return $http.put('/ideas/' + tarea._id + '/rechazar', {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
+    return $http.put('/ideas/' + tarea._id + '/rechazar', null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
       console.log(res.body);
     });
   };
@@ -181,11 +179,14 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'authFactory', '$modal', fu
 
 
   $scope.eliminarIdea = function(idea){
-    ideasFactory.eliminar(idea);
+    ideasFactory.eliminar(idea).then(function () {
+      location.reload();
+    });
   };
 
   $scope.postularseA = function(idea){
-    ideasFactory.postularse(idea);
+     $scope.estadoPostulacion = ideasFactory.postularse(idea);
+     console.log($scope.estadoPostulacion.value); 
   };
 
   $scope.abrirDetalles = function(idea){
@@ -231,24 +232,35 @@ app.controller('detallesCRTL', ['$scope','$state','idea', function($scope, $stat
 }])
 
 app.controller('tareasPendientesCTRL', ['$scope','ideasFactory', function($scope, ideasFactory, idea){
-  $scope.tareasPendientes = ideasFactory.obtenerTareasPendientes();
-}])
-
-app.controller('actividadesCTRL', ['$scope','$state','ideasFactory', function($scope, $state, ideasFactory){
-
-  $scope.actividades = ideasFactory.obtenerActividades();
-
-
-  $scope.cerrar=function(){
-    $scope.modalInstance.close();
-  };
+  ideasFactory.obtenerTareasPendientes().then(function(tareas) {
+    $scope.tareasPendientes = tareas.data;
+  });
 
   $scope.aceptarTarea = function(tarea){
     ideasFactory.aceptarTarea(tarea);
+    $scope.modalInstance.close();
+    $scope.cerrar();
   };
 
   $scope.rechazarTarea = function(tarea){
     ideasFactory.rechazarTarea(tarea);
+    $scope.cerrar();
+  };
+
+  $scope.cerrar=function(){
+    $scope.modalInstance.close();
+  };
+}])
+
+app.controller('actividadesCTRL', ['$scope','$state','ideasFactory', function($scope, $state, ideasFactory){
+
+  ideasFactory.obtenerActividades().then(function(activ) {
+    $scope.actividades = activ.data;
+  });
+
+
+  $scope.cerrar=function(){
+    $scope.modalInstance.close();
   };
 }])
 

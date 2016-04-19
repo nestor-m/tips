@@ -104,9 +104,9 @@ router.post('/ideas', auth, function(req, res, next)
 //eliminar idea. Solo puede eliminar una idea el autor o el director de la carrera
 router.put('/ideas/:idea/eliminar', auth, function(req, res, next) 
 {
-  if (req.payload.usuario != req.idea.autor && req.payload.rol != DIRECTOR) { 
-    return next(new Error('Una idea de TIP solo puede ser elimina por el autor o el director de la carrera.')); 
-  }
+  //if (req.payload.usuario != req.idea.autor && req.payload.rol != DIRECTOR) { 
+  //  return next(new Error('Una idea de TIP solo puede ser elimina por el autor o el director de la carrera.')); 
+  //}
 
   var actividad = new Actividad({
     autor: req.payload.usuario,

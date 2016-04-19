@@ -14,7 +14,7 @@
     <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
       <ul class="nav navbar-nav">
         <li ng-show="isLoggedIn()"><a>{{ currentUser().usuario }}</a></li>
-        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+        <li ng-show="isLoggedIn()"><a href="/#/login" ng-click="logOut()">Log Out</a></li>
         <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
         <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
       </ul>
@@ -35,9 +35,10 @@
         <span style="font-size:15px; margin-left:20px;">
           <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
         </span>
-        <a><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
+        <a ng-hide="usuario.rol == 'ALUMNO'"><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
         <span style="font-size:15px; margin-left:20px;">
           <button ng-click="postularseA(idea)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
+            {{estadoPostulacion}}
         </span>
       </div>
 
@@ -86,7 +87,7 @@
         <div class="modal-body">
             <ul>
                 <div ng-repeat="tarea in tareasPendientes">
-                  <span> Autor : {{tarea.autor}} , Accion : {{tarea.accion}} , idea: {{tarea.idea}} , hora : {{tarea.date}} </span>
+                  <span> Autor : {{tarea.autor}} , Accion : {{tarea.descripcion}} , postulante: {{tarea.postulante}} , hora : {{tarea.fecha}} </span>
                   <button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
                   <button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
                 </div>
@@ -104,8 +105,8 @@
 
         <div class="modal-body">
             <div ng-repeat="actividad in actividades">
-              {{actividad}}
-              <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea}} , hora : {{actividad.date}} </span>
+              
+              <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea.descripcion}} , hora : {{actividad.date}} </span>
             </div>
         </div>
         <div class="modal-footer">
