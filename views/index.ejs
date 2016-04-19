@@ -30,6 +30,11 @@
       <div class="page-header">
         <h1>TIPS</h1>
       </div>
+
+      <div ng-show="mostrarMensajePostulacionExitosa" class="alert alert-success row">
+        <span>Postulacion exitosa {{ideaALaQueSePostula.titulo}}</span>
+      </div>
+              
       <div ng-repeat="idea in ideas">
         {{idea.titulo}}
         <span style="font-size:15px; margin-left:20px;">
@@ -37,8 +42,8 @@
         </span>
         <a ng-hide="usuario.rol == 'ALUMNO'"><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
         <span style="font-size:15px; margin-left:20px;">
-          <button ng-click="postularseA(idea)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
-            {{estadoPostulacion}}
+          <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
+            
         </span>
       </div>
 

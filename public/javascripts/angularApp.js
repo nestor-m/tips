@@ -34,7 +34,7 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlR
       }]
     });
 
-    $urlRouterProvider.otherwise('home');
+    $urlRouterProvider.otherwise('login');
 }]);
 
 app.factory('authFactory', ['$http', '$window', function($http, $window){
@@ -129,12 +129,7 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
   };
 
   o.postularse = function(idea){
-    return $http.put('/ideas/'+ idea._id + '/postular', null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).
-        then(function(response) {
-          return "CORRECTO";
-        }, function(response) {
-          return "PROBLEMA";
-      });
+    return $http.put('/ideas/'+ idea._id + '/postular', null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}});
   };
 
   o.aceptarTarea = function(tarea){
@@ -152,9 +147,11 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
   return o;
 }]);
 
-app.controller('MainCtrl', ['$scope','ideasFactory', 'authFactory', '$modal', function($scope,ideasFactory,authFactory,$modal)
+app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '$modal', function($timeout,$scope,ideasFactory,authFactory,$modal)
 { 
   //$scope.isLoggedIn = auth.isLoggedIn;
+
+  $scope.mostrarMensajePostulacionExitosa = false;
 
   $scope.ideas = ideasFactory.ideas;
   $scope.usuario = authFactory.currentUser();
@@ -185,8 +182,15 @@ app.controller('MainCtrl', ['$scope','ideasFactory', 'authFactory', '$modal', fu
   };
 
   $scope.postularseA = function(idea){
-     $scope.estadoPostulacion = ideasFactory.postularse(idea);
-     console.log($scope.estadoPostulacion.value); 
+     //$scope.estadoPostulacion = ideasFactory.postularse(idea);
+     //console.log($scope.estadoPostulacion); 
+     $scope.ideaALaQueSePostula = idea;
+     ideasFactory.postularse(idea).then(function(response){
+      $scope.mostrarMensajePostulacionExitosa = true;
+      $timeout(function(){$scope.mostrarMensajePostulacionExitosa = false;} , 3000);
+     }, function(response) {
+      //TODO: hacer algo cuando hay error
+    });
   };
 
   $scope.abrirDetalles = function(idea){
