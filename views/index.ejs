@@ -34,7 +34,7 @@
       <div ng-show="mostrarMensajePostulacionExitosa" class="alert alert-success row">
         <span>Postulacion exitosa {{ideaALaQueSePostula.titulo}}</span>
       </div>
-              
+
       <div ng-repeat="idea in ideas">
         {{idea.titulo}}
         <span style="font-size:15px; margin-left:20px;">
@@ -92,7 +92,7 @@
         <div class="modal-body">
             <ul>
                 <div ng-repeat="tarea in tareasPendientes">
-                  <span> Autor : {{tarea.autor}} , Accion : {{tarea.descripcion}} , postulante: {{tarea.postulante}} , hora : {{tarea.fecha}} </span>
+                  <span> Autor : {{tarea.autor}} , Descripcion : {{tarea.descripcion}} , postulante: {{tarea.postulante}} , hora : {{tarea.fecha}} </span>
                   <button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
                   <button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
                 </div>
@@ -121,7 +121,7 @@
 
     <script type="text/ng-template" id="/register.html">
   <div class="page-header">
-    <h1>Flapper News</h1>
+    <h1>TIPS</h1>
   </div>
 
   <div ng-show="error" class="alert alert-danger row">

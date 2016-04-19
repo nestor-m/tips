@@ -101,12 +101,22 @@ router.post('/ideas', auth, function(req, res, next)
   });
 });
 
+function callbackIdeaConAccion(actividad, res, next) {
+  return function(err, idea){
+    if (err) { return next(err); }
+
+    actividad.save();
+
+    res.json(idea);
+  }
+}
+
 //eliminar idea. Solo puede eliminar una idea el autor o el director de la carrera
 router.put('/ideas/:idea/eliminar', auth, function(req, res, next) 
 {
-  //if (req.payload.usuario != req.idea.autor && req.payload.rol != DIRECTOR) { 
-  //  return next(new Error('Una idea de TIP solo puede ser elimina por el autor o el director de la carrera.')); 
-  //}
+  if (req.payload.usuario != req.idea.autor && req.payload.rol != DIRECTOR) { 
+    return next(new Error('Una idea de TIP solo puede ser elimina por el autor o el director de la carrera.')); 
+  }
 
   var actividad = new Actividad({
     autor: req.payload.usuario,
@@ -114,13 +124,7 @@ router.put('/ideas/:idea/eliminar', auth, function(req, res, next)
     idea: req.idea
   });
 
-  req.idea.eliminar(function(err, idea){
-    if (err) { return next(err); }
-
-    actividad.save();
-
-    res.json(idea);
-  });
+  req.idea.eliminar(callbackIdeaConAccion(actividad, res, next));
 });
 
 //postularse para una idea. Solo alumnos
@@ -136,13 +140,7 @@ router.put('/ideas/:idea/postular', auth, function(req, res, next)
     idea: req.idea
   });
 
-  req.idea.postular(req.payload.usuario,function(err, idea){
-    if (err) { return next(err); }
-
-    actividad.save();
-
-    res.json(idea);
-  });
+  req.idea.postular(req.payload.usuario, callbackIdeaConAccion(actividad, res, next));
 });
 
 //ver loggeo de actividades
