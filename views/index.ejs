@@ -35,28 +35,33 @@
         <span>Postulacion exitosa {{ideaALaQueSePostula.titulo}}</span>
       </div>
 
-      <div class="container">
-        <div ng-repeat="idea in ideas">
-          <div class="row">
-            <div class="col-md-2">
-              {{idea.titulo}}
-            </div>
-            <div class="col-md-1">
-              <span>
-                <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
-              </span>
-            </div>
-            <div class="col-md-2" ng-hide="usuario.rol == 'ALUMNO'">
-              <a><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
-            </div>
-            <div class="col-md-2">
-              <span>
-                <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <table class="table table-striped table-hover">
+        <thead></thead>
+        <tbody>
+            <tr ng-repeat="idea in ideas">
+              <td>
+                {{idea.titulo}}
+              </td>
+              <td>
+                <span>
+                  <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
+                </span>
+              </td>
+              <td>
+                <div ng-hide="usuario.rol == 'ALUMNO'">
+                  <a><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span>
+                  </a>
+                </div>
+              </td>
+              <td>
+                <span>
+                  <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary btn-sm">Postularme a idea</button>
+                </span>
+             </td>
+            </tr>
+       </tbody>
+      </table>
 
       <form ng-submit="agregarIdea()" style="margin-top:30px;" ng-show="usuario.rol == 'DOCENTE'">
         <h3>Agregar una nueva idea</h3>
@@ -85,6 +90,33 @@
 </html>
 
 <!--
+
+
+  <div class="container">
+        <div ng-repeat="idea in ideas">
+          <div class="row">
+            <div class="col-md-2">
+              {{idea.titulo}}
+            </div>
+            <div class="col-md-1">
+              <span>
+                <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
+              </span>
+            </div>
+            <div class="col-md-2" ng-hide="usuario.rol == 'ALUMNO'">
+              <a><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
+            </div>
+            <div class="col-md-2">
+              <span>
+                <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
   <table class="table table-striped table-hover">
     <thead></thead>
     <tbody>

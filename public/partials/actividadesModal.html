@@ -10,22 +10,20 @@
     		<th>Hora</th>
     	</thead>
     	<tbody>
-			<div ng-repeat="actividad in actividades">
-				<tr>
-          			<td> 
-            			{{actividad.autor}} 
-          			</td>
-          			<td> 
-            			{{actividad.accion}} 
-          			</td>
-          			<td> 
-            			{{actividad.idea.descripcion}} 
-          			</td>
-          			<td> 
-            			{{actividad.date}} 
-          			</td>
-          		</tr>
-    		</div> 		
+			<tr ng-repeat="actividad in actividades">
+          		<td> 
+            		{{actividad.autor}} 
+          		</td>
+         		<td> 
+            		{{actividad.accion}} 
+          		</td>
+         		<td> 
+           			{{actividad.idea.descripcion}} 
+         		</td>
+          		<td> 
+           			{{actividad.date}} 
+         		</td>
+          	</tr>
     	</tbody>
     </table>
 </div>
