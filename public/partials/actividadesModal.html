@@ -1,0 +1,72 @@
+<div class="modal-header">
+    <h3 class="modal-title">Actividades</h3>
+</div>
+<div class="modal-body">
+	<table class="table table-striped table-hover">
+    	<thead>
+    		<th>Autor</th>
+    		<th>Accion</th>
+    		<th>Idea</th>
+    		<th>Hora</th>
+    	</thead>
+    	<tbody>
+			<div ng-repeat="actividad in actividades">
+				<tr>
+          			<td> 
+            			{{actividad.autor}} 
+          			</td>
+          			<td> 
+            			{{actividad.accion}} 
+          			</td>
+          			<td> 
+            			{{actividad.idea.descripcion}} 
+          			</td>
+          			<td> 
+            			{{actividad.date}} 
+          			</td>
+          		</tr>
+    		</div> 		
+    	</tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-warning" type="button" ng-click="cerrar()">Cerrar</button>
+</div>
+
+
+<!--
+	<table class="table table-striped table-hover">
+    <thead></thead>
+    <tbody>
+      <div ng-repeat="idea in ideas">
+        <tr>
+          <td> 
+            {{idea.titulo}} 
+          </td>
+          <td>
+            <span>
+              <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
+            </span>
+          </td>
+          <td>
+            <div ng-hide="usuario.rol == 'ALUMNO'">
+              <a><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span>
+              </a>
+            </div>
+          </td>
+          <td>
+            <span>
+              <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
+            </span>
+          </td>
+        </tr>
+      </div>
+    </tbody>
+  </table>
+
+
+
+  <div ng-repeat="actividad in actividades">       
+        <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea.descripcion}} , hora : {{actividad.date}} </span>
+    </div>
+-->

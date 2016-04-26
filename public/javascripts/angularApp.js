@@ -15,7 +15,7 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlR
     })
     .state('login', {
       url: '/login',
-      templateUrl: '/login.html',
+      templateUrl: '/partials/login.html',
       controller: 'AuthCtrl',
       onEnter: ['$state', 'authFactory', function($state, authFactory){
         if(authFactory.isLoggedIn()){
@@ -25,7 +25,7 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlR
     })
     .state('register', {
       url: '/register',
-      templateUrl: '/register.html',
+      templateUrl: '/partials/register.html',
       controller: 'AuthCtrl',
       onEnter: ['$state', 'authFactory', function($state, authFactory){
         if(authFactory.isLoggedIn()){
@@ -197,7 +197,7 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
     console.log('titulo: ', idea.titulo);
     console.log('descripcion: ', idea.descripcion);
     $scope.modalInstance= $modal.open({
-      templateUrl: 'detallesModal.html',
+      templateUrl: 'partials/detallesModal.html',
       scope: $scope,
       controller: 'detallesCRTL',
       resolve: {
@@ -210,7 +210,7 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
 
   $scope.verActividades = function(){
     $scope.modalInstance= $modal.open({
-      templateUrl: 'actividadesModal.html',
+      templateUrl: 'partials/actividadesModal.html',
       scope: $scope,
       controller: 'actividadesCTRL'
     });
@@ -218,7 +218,7 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
 
   $scope.verTareasPendientes = function(){
     $scope.modalInstance= $modal.open({
-      templateUrl: 'tareasPendientesModal.html',
+      templateUrl: 'partials/tareasPendientesModal.html',
       scope: $scope,
       controller: 'tareasPendientesCTRL'
     });

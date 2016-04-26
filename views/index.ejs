@@ -35,16 +35,27 @@
         <span>Postulacion exitosa {{ideaALaQueSePostula.titulo}}</span>
       </div>
 
-      <div ng-repeat="idea in ideas">
-        {{idea.titulo}}
-        <span style="font-size:15px; margin-left:20px;">
-          <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
-        </span>
-        <a ng-hide="usuario.rol == 'ALUMNO'"><span style="font-size:15px; margin-left:20px;" class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
-        <span style="font-size:15px; margin-left:20px;">
-          <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
-            
-        </span>
+      <div class="container">
+        <div ng-repeat="idea in ideas">
+          <div class="row">
+            <div class="col-md-2">
+              {{idea.titulo}}
+            </div>
+            <div class="col-md-1">
+              <span>
+                <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
+              </span>
+            </div>
+            <div class="col-md-2" ng-hide="usuario.rol == 'ALUMNO'">
+              <a><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
+            </div>
+            <div class="col-md-2">
+              <span>
+                <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <form ng-submit="agregarIdea()" style="margin-top:30px;" ng-show="usuario.rol == 'DOCENTE'">
@@ -70,101 +81,36 @@
         <button ng-show="usuario.rol == 'DIRECTOR'" ng-click = "verTareasPendientes()" class="btn btn-primary">Ver tareas pendientes</button>
       </span>
     </script>
-
-    <script type="text/ng-template" id='detallesModal.html'>
-      <div class="modal-header">
-            <h3 class="modal-title">Detalles de : {{tituloIdea}}!</h3>
-        </div>
-        <div class="modal-body">
-            <ul>
-                {{descripcionIdea}}
-            </ul>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-warning" type="button" ng-click="cerrar()">Cerrar</button>
-        </div>
-    </script>
-
-    <script type="text/ng-template" id='tareasPendientesModal.html'>
-      <div class="modal-header">
-            <h3 class="modal-title">Tareas Pendientes</h3>
-        </div>
-        <div class="modal-body">
-            <ul>
-                <div ng-repeat="tarea in tareasPendientes">
-                  <span> Autor : {{tarea.autor}} , Descripcion : {{tarea.descripcion}} , postulante: {{tarea.postulante}} , hora : {{tarea.fecha}} </span>
-                  <button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
-                  <button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
-                </div>
-            </ul>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-warning" type="button" ng-click="cerrar()">cerrar</button>
-        </div>
-    </script>
-
-    <script type="text/ng-template" id='actividadesModal.html'>
-      <div class="modal-header">
-            <h3 class="modal-title">Actividades</h3>
-        </div>
-
-        <div class="modal-body">
-            <div ng-repeat="actividad in actividades">
-              
-              <span> Autor : {{actividad.autor}} , Accion : {{actividad.accion}} , idea: {{actividad.idea.descripcion}} , hora : {{actividad.date}} </span>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-warning" type="button" ng-click="cerrar()">Cerrar</button>
-        </div>
-    </script>
-
-    <script type="text/ng-template" id="/register.html">
-  <div class="page-header">
-    <h1>TIPS</h1>
-  </div>
-
-  <div ng-show="error" class="alert alert-danger row">
-    <span>{{ error.message }}</span>
-  </div>
-
-  <form ng-submit="registrarUsuario()" style="margin-top:30px;">
-    <h3>Registrar usuario</h3>
-
-    <div class="form-group"> 
-      <input type="text" class="form-control" placeholder="Nombre de usuario" ng-model="usuario.usuario"></input>
-    </div>
-    <div class="form-group">
-      <input type="password" class="form-control" placeholder="Password" ng-model="usuario.password"></input>
-    </div>
-    <div class="form-group">
-      <select ng-options="x for x in rolesPosibles" ng-model="usuario.rol"></select>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Registrar</button>
-  </form>
-</script>
-<script type="text/ng-template" id="/login.html">
-  <div class="page-header">
-    <h1>TIPS</h1>
-  </div>
-
-  <div ng-show="error" class="alert alert-danger row">
-    <span>{{ error.message }}</span>
-  </div>
-
-  <form ng-submit="logIn()"
-    style="margin-top:30px;">
-    <h3>Log In</h3>
-
-    <div class="form-group">
-      <input type="text" class="form-control" placeholder="Nombre de usuario" ng-model="usuario.usuario"></input>
-    </div>
-    <div class="form-group">
-      <input type="password" class="form-control" placeholder="Password" ng-model="usuario.password"></input>
-    </div>
-    <button type="submit" class="btn btn-primary">Log In</button>
-  </form>
-  </script>
   </body>
 </html>
+
+<!--
+  <table class="table table-striped table-hover">
+    <thead></thead>
+    <tbody>
+      <div ng-repeat="idea in ideas">
+        <tr>
+          <td> 
+            {{idea.titulo}} 
+          </td>
+          <td>
+            <span>
+              <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
+            </span>
+          </td>
+          <td>
+            <div ng-hide="usuario.rol == 'ALUMNO'">
+              <a><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span>
+              </a>
+            </div>
+          </td>
+          <td>
+            <span>
+              <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
+            </span>
+          </td>
+        </tr>
+      </div>
+    </tbody>
+  </table>
+-->

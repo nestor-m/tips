@@ -5,7 +5,8 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('flapper-news:server');
+//var debug = require('debug')('flapper-news:server');
+var debug = require('debug')('TIPS:server');
 var http = require('http');
 
 /**

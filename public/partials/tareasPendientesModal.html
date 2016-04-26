@@ -1,0 +1,15 @@
+<div class="modal-header">
+  <h3 class="modal-title">Tareas Pendientes</h3>
+</div>
+<div class="modal-body">
+  <ul>
+    <div ng-repeat="tarea in tareasPendientes">
+      <span> Autor : {{tarea.autor}} , Descripcion : {{tarea.descripcion}} , postulante: {{tarea.postulante}} , hora : {{tarea.fecha}} </span>
+      <button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
+      <button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
+    </div>
+  </ul>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-warning" type="button" ng-click="cerrar()">cerrar</button>
+</div>
