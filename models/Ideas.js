@@ -42,4 +42,4 @@ IdeaSchema.methods.rechazarPostulacion = function (cb) {
   this.save(cb);
 }
 
-mongoose.model('Idea', IdeaSchema);
+module.exports = mongoose.model('Idea', IdeaSchema);
