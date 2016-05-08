@@ -42,13 +42,7 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
 {
 
   var o = {
-    ideas: [
- //     {title: 'post 1', upvotes: 5},    
- //     {title: 'post 2', upvotes: 2},
- //     {title: 'post 3', upvotes: 15},
- //     {title: 'post 4', upvotes: 9},
- //     {title: 'post 5', upvotes: 4}
-    ]
+    ideas: []
   };
 
   o.obtenerIdeas = function() {
@@ -105,13 +99,6 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
   $scope.ideas = ideasFactory.ideas;
   $scope.usuario = authFactory.currentUser();
   
-//   $scope.posts = [
-//     {title: 'post 1', upvotes: 5},    
-//     {title: 'post 2', upvotes: 2},
-//     {title: 'post 3', upvotes: 15},
-//     {title: 'post 4', upvotes: 9},
-//     {title: 'post 5', upvotes: 4}
-//   ];
   
   $scope.agregarIdea = function(){
     if(!$scope.titulo || $scope.titulo === '') { return; }

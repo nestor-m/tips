@@ -7,7 +7,7 @@
     		<th>Autor</th>
     		<th>Accion</th>
     		<th>Idea</th>
-    		<th>Hora</th>
+    		<th>Fecha</th>
     	</thead>
     	<tbody>
 			<tr ng-repeat="actividad in actividades">
@@ -21,7 +21,7 @@
            			{{actividad.idea.descripcion}} 
          		</td>
           		<td> 
-           			{{actividad.date}} 
+           			{{ actividad.fecha | date:'dd-MM-yyyy HH:mm' }}
          		</td>
           	</tr>
     	</tbody>
