@@ -8,7 +8,21 @@
     <script src="/javascripts/moment.js"></script>
     <script src="/javascripts/angular-moment.js"></script>
     <script src="/javascripts/angularApp.js"></script>
+
+<!-- CONTROLLERS -->
+    <script src="/javascripts/controllers/MainCtrl.js"></script>
+    <script src="/javascripts/controllers/AuthCtrl.js"></script>
+    <script src="/javascripts/controllers/NavCtrl.js"></script>
+    <script src="/javascripts/controllers/actividadesCTRL.js"></script>
+    <script src="/javascripts/controllers/detallesCTRL.js"></script>
+    <script src="/javascripts/controllers/tareasPendientesCTRL.js"></script>
+
+
+<!-- FACTORIES -->
+    <script src="/javascripts/factories/ideasFactory.js"></script>
     <script src="/javascripts/factories/Auth.js"></script>
+
+
    <!-- <style> .glyphicon-thumbs-up { cursor:pointer } </style>-->
   </head>
   <body ng-app="ideasTIP">
@@ -89,30 +103,3 @@
     </script>
   </body>
 </html>
-
-<!--
-
-
-  <div class="container">
-        <div ng-repeat="idea in ideas">
-          <div class="row">
-            <div class="col-md-2">
-              {{idea.titulo}}
-            </div>
-            <div class="col-md-1">
-              <span>
-                <a style="cursor: pointer;" ng-click="abrirDetalles(idea)"> Detalles </a>
-              </span>
-            </div>
-            <div class="col-md-2" ng-hide="usuario.rol == 'ALUMNO'">
-              <a><span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="eliminarIdea(idea)"></span></a>
-            </div>
-            <div class="col-md-2">
-              <span>
-                <button ng-click="postularseA(idea,$index)" ng-show ="usuario.rol == 'ALUMNO'" class="btn btn-primary">Postularme a idea</button>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
--->
