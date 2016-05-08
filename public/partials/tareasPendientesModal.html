@@ -3,10 +3,17 @@
 </div>
 <div class="modal-body">
   <ul>
-    <div ng-repeat="tarea in tareasPendientes">
-      <span> Autor : {{tarea.autor}} , Descripcion : {{tarea.descripcion}} , Postulante: {{tarea.postulante}} , Fecha : {{ tarea.fecha | date:'dd-MM-yyyy HH:mm' }}</span>
-      <button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
-      <button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
+    <div ng-repeat="tarea in tareasPendientes" class="row">
+    	<div class="col-md-8">    	
+      		Autor : {{tarea.autor}} , Descripcion : {{tarea.descripcion}} , Postulante: {{tarea.postulante}} , Fecha : {{ tarea.fecha | date:'dd-MM-yyyy HH:mm' }}
+      	</div>
+      	<div class="col-md-2">
+      		<button class="btn btn-warning" type="button" ng-click="aceptarTarea(tarea)">Aceptar</button>
+      	</div>
+      	<div class="col-md-2">
+      		<button class="btn btn-warning" type="button" ng-click="rechazarTarea(tarea)">Rechazar</button>
+      	</div>      
+      <div>
     </div>
   </ul>
 </div>
