@@ -42,7 +42,7 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
     $scope.modalInstance= $modal.open({
       templateUrl: 'partials/detallesModal.html',
       scope: $scope,
-      controller: 'detallesCRTL',
+      controller: 'detallesCTRL',
       resolve: {
         idea: function () {
           return idea;
