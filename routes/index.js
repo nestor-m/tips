@@ -78,6 +78,16 @@ router.get('/ideas/:idea', function(req, res, next)
   res.json(req.idea);
 });
 
+//obtener comentarios de una idea
+router.get('/ideas/:idea/comentarios', function(req, res, next) 
+{
+  req.idea.populate('comentarios', function(err, idea) {
+    if (err) { return next(err); }
+
+    res.json(idea.comentarios);
+  });
+});
+
 //proponer nueva idea, solo docentes
 //ej JSON: {"titulo":"Una idea","descripcion":"Una idea de TIP"}
 router.post('/ideas', auth, function(req, res, next) 

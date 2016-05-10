@@ -4,7 +4,8 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
 {
 
   var o = {
-    ideas: []
+    ideas: [],
+    comentariosIdeaSeleccionada: []
   };
 
   o.obtenerIdeas = function() {
@@ -46,6 +47,13 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
   o.rechazarTarea = function(tarea){
     return $http.put('/ideas/' + tarea._id + '/rechazar', null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
       console.log(res.body);
+    });
+  };
+
+  o.obtenerComentariosDeIdea = function(idea){
+    return $http.get('/ideas/' + idea._id + '/comentarios',{headers: {Authorization: 'Bearer '+authFactory.getToken()}})
+    .success(function(data){
+      angular.copy(data, o.comentariosIdeaSeleccionada);
     });
   };
 
