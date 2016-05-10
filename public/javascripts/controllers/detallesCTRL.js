@@ -19,17 +19,10 @@ app.controller('detallesCTRL', ['$scope','$http','idea','authFactory', 'ideasFac
   		autor: $scope.usuario.usuario,  		
   		contenido: $scope.comentario
   	};
-    console.log($scope.comentario);
-  	return $http.post('/ideas/'+ $scope.idea._id + '/comentar',
-  		comentario,
-  		{
-  			headers: { Authorization: 'Bearer ' + authFactory.getToken() }
-  		}
-  	).success(function(data){//espero que me retorne la lista de todos los comentarios
-  		$scope.idea.comentarios = data;
-  	},function(error){
-  		alert("No se pudo realizar el comentario \n" + error);
-  	});
+    return ideasFactory.comentarIdea($scope.idea,comentario).then(function(){
+      $scope.idea.comentarios = ideasFactory.comentariosIdeaSeleccionada;
+      $scope.comentario = "";
+    });
   };
 
 }]);
