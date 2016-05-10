@@ -5,7 +5,8 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
 
   var o = {
     ideas: [],
-    comentariosIdeaSeleccionada: []
+    comentariosIdeaSeleccionada: [],
+    materiasRelacionadasAIdeaSeleccionada: []
   };
 
   o.obtenerIdeas = function() {
@@ -29,8 +30,9 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
   };
 
   o.eliminar = function(idea){
-    return $http.put('/ideas/' + idea._id +  '/eliminar' , null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}}).success(function(res){
-      console.log(res.body);
+    return $http.put('/ideas/' + idea._id +  '/eliminar' , null, {headers: {Authorization: 'Bearer '+authFactory.getToken()}})
+    .success(function(res){
+      o.ideas = res;
     });
   };
 
@@ -54,6 +56,13 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
     return $http.get('/ideas/' + idea._id + '/comentarios',{headers: {Authorization: 'Bearer '+authFactory.getToken()}})
     .success(function(data){
       angular.copy(data, o.comentariosIdeaSeleccionada);
+    });
+  };
+
+  o.obtenerMateriasRelacionadasAIdea = function(idea){
+    return $http.get('/ideas/' + idea._id + '/materias',{headers: {Authorization: 'Bearer '+authFactory.getToken()}})
+    .success(function(data){
+      angular.copy(data, o.materiasRelacionadasAIdeaSeleccionada);
     });
   };
 

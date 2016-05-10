@@ -17,6 +17,10 @@ var IdeaSchema = new mongoose.Schema({
   comentarios: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comentario'
+  }],
+  materias: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Materia'
   }]
 });
 

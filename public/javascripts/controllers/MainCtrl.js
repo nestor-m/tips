@@ -1,18 +1,29 @@
 var app = angular.module('ideasTIP');
 
-app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '$modal', function($timeout,$scope,ideasFactory,authFactory,$modal)
+app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '$modal','materiasFactory', function($timeout,$scope,ideasFactory,authFactory,$modal,materiasFactory)
 { 
+
   $scope.mostrarMensajePostulacionExitosa = false;
 
   $scope.ideas = ideasFactory.ideas;
   $scope.usuario = authFactory.currentUser();
+
+  //materias
+  if($scope.usuario.rol == 'DOCENTE'){
+    materiasFactory.obtenerMaterias().then(function(){
+      $scope.materias = materiasFactory.materias;
+    },function(error){
+      alert("No se pudieron obtener las materias del servidor\n" + error);
+    });
+  }  
   
-  
-  $scope.agregarIdea = function(){
+  $scope.agregarIdea = function()
+  {
     if(!$scope.titulo || $scope.titulo === '') { return; }
     ideasFactory.crearIdea({
       titulo: $scope.titulo,
-      descripcion: $scope.descripcion
+      descripcion: $scope.descripcion,
+      materias: $scope.idsMateriasSeleccionadas
     });
     $scope.titulo = '';
     $scope.descripcion = '';
@@ -21,7 +32,7 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
 
   $scope.eliminarIdea = function(idea){
     ideasFactory.eliminar(idea).then(function () {
-      location.reload();
+      $scope.ideas = ideasFactory.ideas;
     });
   };
 
@@ -51,13 +62,13 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
     });
   };
 
-  $scope.verActividades = function(){
-    $scope.modalInstance= $modal.open({
-      templateUrl: 'partials/actividadesModal.html',
-      scope: $scope,
-      controller: 'actividadesCTRL'
-    });
-  };
+  // $scope.verActividades = function(){
+  //   $scope.modalInstance= $modal.open({
+  //     templateUrl: 'partials/actividadesModal.html',
+  //     scope: $scope,
+  //     controller: 'actividadesCTRL'
+  //   });
+  // };
 
   $scope.verTareasPendientes = function(){
     $scope.modalInstance= $modal.open({

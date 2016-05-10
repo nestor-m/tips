@@ -3,13 +3,11 @@ var router = express.Router();
 
 var mongoose = require('mongoose');
 var Idea = mongoose.model('Idea');
-
 var passport = require('passport');
 var Usuario = mongoose.model('Usuario');
-
 var Actividad = mongoose.model('Actividad');
-
 var Comentario = mongoose.model('Comentario');
+var Materia = mongoose.model('Materia');
 
 var jwt = require('express-jwt');
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
@@ -23,6 +21,7 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 const ALUMNO = 'ALUMNO';
 const DOCENTE = 'DOCENTE';
 const DIRECTOR = 'DIRECTOR';
+const ADMINISTRADOR = 'ADMINISTRADOR';
 //ESTADOS DE UNA IDEA
 const DISPONIBLE = 'DISPONIBLE';
 const REVISION = 'REVISION';
@@ -35,6 +34,10 @@ const ACEPTACION = 'ACEPTACION';
 const RECHAZO = 'RECHAZO';
 const POSTULACION = 'POSTULACION';
 const ELIMINACION = 'ELIMINACION';
+//ESTADOS DE UNA MATERIA
+const ACTIVO = 'ACTIVO';
+const INACTIVO = 'INACTIVO';
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) 
@@ -85,6 +88,17 @@ router.get('/ideas/:idea/comentarios', function(req, res, next)
     if (err) { return next(err); }
 
     res.json(idea.comentarios);
+  });
+});
+
+//TODO: UQ E SE HAGA EN EL MISMO REQUEST PARA LOS COMENTARIOS
+//obtener materias relacionadas a una idea
+router.get('/ideas/:idea/materias', function(req, res, next) 
+{
+  req.idea.populate('materias', function(err, idea) {
+    if (err) { return next(err); }
+
+    res.json(idea.materias);
   });
 });
 
@@ -162,7 +176,18 @@ router.put('/ideas/:idea/eliminar', auth, function(req, res, next)
     idea: req.idea
   });
 
-  req.idea.eliminar(callbackIdeaConAccion(actividad, res, next));
+  req.idea.eliminar(function(err, idea){
+      if (err) { return next(err); }
+
+      actividad.save();
+
+      var query = Idea.find({ estado: { $ne: ELIMINADA } });//busco las que tienen estado != ELIMINADA
+      query.exec(function(err, ideas){
+        if(err){ return next(err); }
+
+        res.json(ideas);
+      });
+    });
 });
 
 //postularse para una idea. Solo alumnos
@@ -252,9 +277,6 @@ router.put('/ideas/:idea/rechazar', auth, function(req, res, next)
 });
 
 
-
-
-
 //REGISTRO de nuevos usuarios
 //ejemplo JSON: {"usuario":"director","password":"director","rol":"DIRECTOR"}
 router.post('/registro', function(req, res, next){
@@ -263,7 +285,7 @@ router.post('/registro', function(req, res, next){
   }
 
   var rol = req.body.rol;
-  if(rol != ALUMNO && rol != DOCENTE && rol != DIRECTOR){
+  if(rol != ALUMNO && rol != DOCENTE && rol != DIRECTOR && rol != ADMINISTRADOR){
     return res.status(500).json({message: 'Rol invalido'});
   }
 
@@ -300,5 +322,73 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
+//MATERIAS
+//obtener todas las materias
+router.get('/materias', function(req, res, next) 
+{
+  var query = Materia.find({ estado: ACTIVO });
+  query.exec(function(err, materias){
+    if(err){ return next(err); }
+
+    res.json(materias);
+  });
+});
+
+router.param('materia', function(req, res, next, id) 
+{
+  var query = Materia.findById(id);
+
+  query.exec(function (err, materia){
+    if (err) { return next(err); }
+    if (!materia) { return next(new Error('can\'t find materia')); }
+
+    if(materia.estado == INACTIVO){//no permito el acceso a materias inactivas
+      return next(new Error('La materia esta inactiva'));
+    }
+
+    req.materia = materia;
+    return next();
+  });
+});
+
+//eliminar materia
+router.put('/materias/:materia/eliminar', auth, function(req, res, next) 
+{
+  if (req.payload.rol != ADMINISTRADOR) { //el unico que tiene acceso a las materias es el administrador
+    return next(new Error('El ADMINISTRADOR es el unico que tiene acceso a las materias')); 
+  }
+
+  req.materia.eliminar(function(err){
+      if (err) { return next(err); }
+
+      var query = Materia.find({ estado: ACTIVO });
+      query.exec(function(err, materias){
+        if(err){ return next(err); }
+
+        res.json(materias);
+      });
+  });
+});
+
+//nueva materia
+router.post('/materias', auth, function(req, res, next) 
+{
+  if (req.payload.rol != ADMINISTRADOR) { 
+    return next(new Error('El ADMINISTRADOR es el unico que tiene acceso a las materias')); 
+  }
+
+  var materia = new Materia(req.body);
+
+  materia.save(function(err){
+      if (err) { return next(err); }
+
+      var query = Materia.find({ estado: ACTIVO });
+      query.exec(function(err, materias){
+        if(err){ return next(err); }
+
+        res.json(materias);
+      });
+    });
+});
 
 module.exports = router;
