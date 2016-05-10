@@ -17,6 +17,7 @@ app.controller('detallesCTRL', ['$scope','$http','idea','authFactory',
   		autor: $scope.usuario.usuario,  		
   		contenido: $scope.comentario
   	};
+    console.log($scope.comentario);
   	return $http.post('/ideas/'+ $scope.idea._id + '/comentar',
   		comentario,
   		{

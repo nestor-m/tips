@@ -9,6 +9,8 @@ var Usuario = mongoose.model('Usuario');
 
 var Actividad = mongoose.model('Actividad');
 
+var Comentario = mongoose.model('Comentario');
+
 var jwt = require('express-jwt');
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
@@ -28,6 +30,7 @@ const ACEPTADA = 'ACEPTADA';
 const ELIMINADA = 'ELIMINADA';
 //ACTIVIDADES
 const PROPUESTA = 'PROPUESTA';
+const COMENTARIO = 'COMENTARIO';
 const ACEPTACION = 'ACEPTACION';
 const RECHAZO = 'RECHAZO';
 const POSTULACION = 'POSTULACION';
@@ -100,6 +103,30 @@ router.post('/ideas', auth, function(req, res, next)
     res.json(idea);
   });
 });
+
+
+router.post('/ideas/:idea/comentar', function(req, res, next){
+  var comentario = new Comentario(req.body);
+  comentario.idea = req.idea;
+
+  
+  var actividad = new Actividad({
+    autor : req.body.autor,
+    accion: COMENTARIO,
+    idea: req.idea
+  });
+  
+  actividad.save();
+  req.idea.comentarios.push(comentario);
+  req.idea.save();
+
+  req.idea.traerTodosComentarios(function(err, comentarios){
+    if (err) { return next(err); }
+
+    res.json(comentarios);
+  });
+});
+
 
 function callbackIdeaConAccion(actividad, res, next) {
   return function(err, idea){
@@ -212,6 +239,9 @@ router.put('/ideas/:idea/rechazar', auth, function(req, res, next)
     res.json(idea);
   });
 });
+
+
+
 
 
 //REGISTRO de nuevos usuarios
