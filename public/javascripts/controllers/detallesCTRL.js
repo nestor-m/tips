@@ -1,22 +1,25 @@
 var app = angular.module('ideasTIP');
 
-app.controller('detallesCTRL', ['$scope','$http','idea','authFactory',
-	function($scope,$http, idea, authFactory)
+app.controller('detallesCTRL', ['$scope','$http','idea','authFactory', 'ideasFactory',
+	function($scope,$http, idea, authFactory, ideasFactory)
 	{
+
   $scope.idea = idea;
 
-  // $scope.idea.comentarios = [
-	 //  {"autor":"pepe","contenido":"Me parece una muy buena idea","fecha":new Date()},
-	 //  {"autor":"pepe","contenido":"Me parece una muy buena idea","fecha":new Date()},
-	 //  {"autor":"pepe","contenido":"Me parece una muy buena idea","fecha":new Date()},
-	 //  {"autor":"pepe","contenido":"Me parece una muy buena idea","fecha":new Date()}
-  // ];
+  ideasFactory.obtenerComentariosDeIdea(idea).then(function(){
+    $scope.idea.comentarios = ideasFactory.comentariosIdeaSeleccionada;
+  });
+
+  ideasFactory.obtenerMateriasRelacionadasAIdea(idea).then(function(){
+    $scope.idea.materiasRelacionadas = ideasFactory.materiasRelacionadasAIdeaSeleccionada;
+  });
 
   $scope.comentar = function(){
   	var comentario = {
   		autor: $scope.usuario.usuario,  		
   		contenido: $scope.comentario
   	};
+    console.log($scope.comentario);
   	return $http.post('/ideas/'+ $scope.idea._id + '/comentar',
   		comentario,
   		{

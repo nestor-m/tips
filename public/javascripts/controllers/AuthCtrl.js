@@ -3,7 +3,7 @@ var app = angular.module('ideasTIP');
 app.controller('AuthCtrl', ['$scope','$state','authFactory', function($scope, $state, authFactory){
   $scope.usuario = {};
 
-  $scope.rolesPosibles = ["DIRECTOR", "DOCENTE", "ALUMNO"];
+  $scope.rolesPosibles = ["DIRECTOR", "DOCENTE", "ALUMNO", "ADMINISTRADOR"];
 
   $scope.registrarUsuario = function(){
     authFactory.register($scope.usuario).error(function(error){

@@ -32,6 +32,16 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlR
           $state.go('home');
         }
       }]
+    })
+    .state('materias', {
+      url: '/materias',
+      templateUrl: '/partials/materias.html',
+      controller: 'MateriasCtrl',
+      resolve: {
+        materias:  ['materiasFactory', function(materiasFactory){
+          return materiasFactory.obtenerMaterias();
+        }]
+      }
     });
 
     $urlRouterProvider.otherwise('login');

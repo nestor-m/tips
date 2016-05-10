@@ -5,6 +5,9 @@ require('./models/Ideas');
 require('./models/Usuarios');
 require('./models/Actividades');
 
+require('./models/Comentarios');
+require('./models/Materias');
+
 require('./config/passport');
 
 

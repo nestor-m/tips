@@ -13,12 +13,24 @@ var IdeaSchema = new mongoose.Schema({
   autor: String,
   fecha: { type: Date, default: Date.now },
   estado: { type: String, default: DISPONIBLE },
-  postulante: String
+  postulante: String,
+  comentarios: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comentario'
+  }],
+  materias: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Materia'
+  }]
 });
 
-/*IdeaSchema.methods.findNoEliminadas = function (cb) {
-  return this.model('Idea').find({ estado: { $ne: ELIMINADA } }, cb);
-}*/
+//IdeaSchema.methods.findNoEliminadas = function (cb) {
+//  return this.model('Idea').find({ estado: { $ne: ELIMINADA } }, cb);
+//}
+
+IdeaSchema.methods.traerTodosComentarios = function (cb) {
+  return this.model('Idea').find({}, {'comentarios' : 1}, cb);
+}
 
 IdeaSchema.methods.eliminar = function (cb) {
   this.estado = ELIMINADA;
