@@ -117,13 +117,14 @@ router.post('/ideas/:idea/comentar', function(req, res, next){
   });
   
   actividad.save();
+  comentario.save();
   req.idea.comentarios.push(comentario);
   req.idea.save();
 
-  req.idea.traerTodosComentarios(function(err, comentarios){
+  req.idea.populate('comentarios', function(err, idea) {
     if (err) { return next(err); }
 
-    res.json(comentarios);
+    res.json(idea.comentarios);
   });
 });
 
