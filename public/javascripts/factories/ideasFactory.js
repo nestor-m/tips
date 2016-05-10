@@ -59,6 +59,13 @@ app.factory('ideasFactory', ['$http', 'authFactory', function($http,authFactory)
     });
   };
 
+  o.comentarIdea = function(idea,comentario){
+    return $http.post('/ideas/'+ idea._id + '/comentar',comentario,{headers: {Authorization: 'Bearer ' + authFactory.getToken()}})
+    .success(function(data){//espero que me retorne la lista de todos los comentarios
+      angular.copy(data, o.comentariosIdeaSeleccionada);
+    });
+  }
+
   o.obtenerMateriasRelacionadasAIdea = function(idea){
     return $http.get('/ideas/' + idea._id + '/materias',{headers: {Authorization: 'Bearer '+authFactory.getToken()}})
     .success(function(data){
