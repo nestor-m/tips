@@ -393,9 +393,6 @@ router.put('/materias/:materia/modificar', auth, function(req, res, next)
     return next(new Error('El ADMINISTRADOR es el unico que tiene acceso a las materias')); 
   }
 
-console.log('HOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLA');
-  console.log(req.body);
-
   req.materia.cambiarNombre(req.body.nombre,function(err){
       if (err) { return next(err); }
 
