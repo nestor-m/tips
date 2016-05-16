@@ -11,6 +11,11 @@ app.factory('authFactory', ['$http', '$window', function($http, $window){
     return $window.localStorage['user-token'];
   }
 
+  auth.getAuthorizationHeader = function()
+  {
+    return {headers: {Authorization: 'Bearer ' + auth.getToken()}};
+  }
+
   auth.isLoggedIn = function(){
     var token = auth.getToken();
 
