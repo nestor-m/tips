@@ -323,8 +323,7 @@ router.post('/login', function(req, res, next){
 });
 
 //MATERIAS
-//obtener todas las materias
-router.get('/materias', function(req, res, next) 
+function findMaterias(res, next)
 {
   var query = Materia.find({ estado: ACTIVO });
   query.exec(function(err, materias){
@@ -332,6 +331,11 @@ router.get('/materias', function(req, res, next)
 
     res.json(materias);
   });
+}
+//obtener todas las materias
+router.get('/materias', function(req, res, next) 
+{
+  findMaterias(res,next);
 });
 
 router.param('materia', function(req, res, next, id) 
@@ -351,6 +355,7 @@ router.param('materia', function(req, res, next, id)
   });
 });
 
+
 //eliminar materia
 router.put('/materias/:materia/eliminar', auth, function(req, res, next) 
 {
@@ -361,12 +366,7 @@ router.put('/materias/:materia/eliminar', auth, function(req, res, next)
   req.materia.eliminar(function(err){
       if (err) { return next(err); }
 
-      var query = Materia.find({ estado: ACTIVO });
-      query.exec(function(err, materias){
-        if(err){ return next(err); }
-
-        res.json(materias);
-      });
+      findMaterias(res,next);
   });
 });
 
@@ -382,13 +382,25 @@ router.post('/materias', auth, function(req, res, next)
   materia.save(function(err){
       if (err) { return next(err); }
 
-      var query = Materia.find({ estado: ACTIVO });
-      query.exec(function(err, materias){
-        if(err){ return next(err); }
-
-        res.json(materias);
-      });
+      findMaterias(res,next);
     });
+});
+
+//modificar materia
+router.put('/materias/:materia/modificar', auth, function(req, res, next) 
+{
+  if (req.payload.rol != ADMINISTRADOR) { //el unico que tiene acceso a las materias es el administrador
+    return next(new Error('El ADMINISTRADOR es el unico que tiene acceso a las materias')); 
+  }
+
+console.log('HOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLA');
+  console.log(req.body);
+
+  req.materia.cambiarNombre(req.body.nombre,function(err){
+      if (err) { return next(err); }
+
+      findMaterias(res,next);
+  });
 });
 
 module.exports = router;

@@ -14,4 +14,9 @@ MateriaSchema.methods.eliminar = function (cb) {
   this.save(cb);
 }
 
+MateriaSchema.methods.cambiarNombre = function (nuevoNombre,cb) {
+  this.nombre = nuevoNombre;
+  this.save(cb);
+}
+
 mongoose.model("Materia", MateriaSchema);
