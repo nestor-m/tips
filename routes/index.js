@@ -12,6 +12,8 @@ var Materia = mongoose.model('Materia');
 var jwt = require('express-jwt');
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
+require('../config/passport');
+
 //req.payload
 //{"_id":"5713232b68883aa822f38606","nombre":"alumno","rol":"ALUMNO","exp":1466056545,"iat":1460872545}
 

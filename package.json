@@ -25,16 +25,16 @@
     "angular-ui-router": "~0.2.18"
   },
   "devDependencies": {
+    "angular-mocks": "~1.5.5",
     "chai": "~3.5.0",
+    "karma": "~0.13.22",
+    "karma-chai": "~0.1.0",
+    "karma-firefox-launcher": "~1.0.0",
+    "karma-mocha": "~1.0.1",
+    "karma-mocha-reporter": "~2.0.3",
     "mocha": "~2.4.5",
     "mockgoose": "^6.0.2",
-    "supertest": "~1.2.0",
-    "protractor": "~3.3.0",
-    "karma": "~0.13.22",
-    "karma-mocha": "~1.0.1",
-    "karma-chai": "~0.1.0",
-    "karma-mocha-reporter": "~2.0.3",
-    "karma-firefox-launcher": "~1.0.0",
-    "angular-mocks": "~1.5.5"
+    "protractor": "^3.3.0",
+    "supertest": "~1.2.0"
   }
 }
