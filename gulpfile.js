@@ -4,9 +4,9 @@ inject = require("gulp-inject");
 gulp.task('default', function () { console.log('Hello Gulp!') });
 
 function injectDep(pathToDep, tag){
-	var factories = gulp.src(pathToDep);
+	var elements = gulp.src(pathToDep);
 
-	return gulp.src("views/index.ejs").pipe(inject(factories, {
+	return gulp.src("views/index.ejs").pipe(inject(elements, {
 		starttag: '<!-- inject:' + tag + ' -->',
     	endtag: '<!-- endinject -->',
 		ignorePath: "public",
