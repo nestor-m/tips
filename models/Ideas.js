@@ -28,9 +28,6 @@ var IdeaSchema = new mongoose.Schema({
 //  return this.model('Idea').find({ estado: { $ne: ELIMINADA } }, cb);
 //}
 
-IdeaSchema.methods.traerTodosComentarios = function (cb) {
-  return this.model('Idea').find({}, {'comentarios' : 1}, cb);
-}
 
 IdeaSchema.methods.eliminar = function (cb) {
   this.estado = ELIMINADA;

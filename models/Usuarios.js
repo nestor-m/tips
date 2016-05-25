@@ -36,4 +36,4 @@ UsuarioSchema.methods.generateJWT = function() {
   }, 'SECRET');
 };
 
-mongoose.model('Usuario', UsuarioSchema);
+module.exports = mongoose.model('Usuario', UsuarioSchema);
