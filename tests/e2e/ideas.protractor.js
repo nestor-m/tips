@@ -54,11 +54,14 @@ context("ya estando logueado", function(){
             element(by.model("descripcion")).sendKeys("el detalle de una nueva idea");
             element(by.buttonText("Crear")).click();
 
-            //by.repeater('calc in calculations')).count()
-            element.all(by.repeater('idea in ideas')).count().then(function(cantIdeas) {
-                cantIdeas.should.be.equal(1);
-                done();
-            });
+            // element.all(by.repeater('idea in ideas')).count().then(function(cantIdeas) {
+            //     cantIdeas.should.be.equal(1);
+            //     done();
+            // });
+            element.all(by.id('tablaIdeaTitulo')).first().getText().then(function(tituloIdea) {
+                 tituloIdea.should.be.equal("titulo de nueva IDEA");
+                 done();
+             });
         });
     });
 
