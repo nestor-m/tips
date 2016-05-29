@@ -1,5 +1,9 @@
 var gulp = require('gulp');
-inject = require("gulp-inject"); 
+var inject = require("gulp-inject");
+var gulpSequence = require("gulp-sequence");
+var Server = require('karma').Server;
+var mocha = require('gulp-mocha');
+var protractor = require("gulp-protractor").protractor;
 
 gulp.task('default', function () { console.log('Hello Gulp!') });
 
@@ -15,11 +19,39 @@ function injectDep(pathToDep, tag){
 }
 
 gulp.task('addFactoriesDep', function(){
-	injectDep("public/javascripts/factories/**/*.js", "factories");
+	return injectDep("public/javascripts/factories/**/*.js", "factories");	
 });
 
 gulp.task('addControllersDep', function(){
-	injectDep("public/javascripts/controllers/**/*.js", "controllers");
+	return injectDep("public/javascripts/controllers/**/*.js", "controllers");	
 });
 
-gulp.task("addAllDep", ["addFactoriesDep", "addControllersDep"]);
+gulp.task("addAllDep", gulpSequence("addFactoriesDep", "addControllersDep"));
+
+
+//TESTS
+gulp.task('mocha', function() {
+    return gulp.src('tests/backend/*.js', {read: false})
+        // gulp-mocha needs filepaths so you can't have any plugins before it
+        .pipe(mocha({reporter: 'nyan'}));
+});
+
+gulp.task('karma', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
+//Si rompe y dice que no encuentra chrome-driver ejecutar
+//$node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager update
+gulp.task('protractor',function(){
+	return gulp.src(["tests/e2e/*.js"])
+				.pipe(protractor({
+				    configFile: "protractor.conf.js",
+				    args: ['--baseUrl', 'http://127.0.0.1:8000']
+				}))
+				.on('error', function(e) { throw e })
+});
+
+gulp.task("test", ["mocha", "karma", "protractor"]);

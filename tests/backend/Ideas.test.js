@@ -14,10 +14,6 @@ describe('propiedad Idea del modelo', function(){
 		})
 	});
 
-	afterEach(function(done) {
-		mockgoose.reset(done);
-	})
-
 	var idea;
 
 	beforeEach(function(done){
@@ -27,6 +23,14 @@ describe('propiedad Idea del modelo', function(){
   		idea.autor =  "Guido";
   		idea.postulante = "postulantePorDefecto";
   		idea.save(done);
+	});
+
+	afterEach(function(done) {
+		mockgoose.reset(done);
+	})
+
+	after(function(done){
+		mongoose.disconnect(done);
 	});
 
 	describe('el metodo postularse a una idea', function(){
