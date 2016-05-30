@@ -48,7 +48,7 @@ gulp.task('protractor',function(){
 	return gulp.src(["tests/e2e/*.js"])
 				.pipe(protractor({
 				    configFile: "protractor.conf.js",
-				    args: ['--baseUrl', 'http://127.0.0.1:8000']
+				    args: ['--baseUrl', 'http://127.0.0.1:3000']
 				}))
 				.on('error', function(e) { throw e; });
 });
