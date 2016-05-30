@@ -53,7 +53,7 @@ gulp.task('protractor',function(){
 				.on('error', function(e) { throw e; });
 });
 
-gulp.task("test", ["mocha", "karma", "protractor"]);
+gulp.task("test", ["mocha", "karma"]);//, "protractor"]);
 
 //CHEQUEAR CODIGO
 gulp.task('lint', function() {
