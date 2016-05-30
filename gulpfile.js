@@ -53,7 +53,7 @@ gulp.task('protractor',function(){
 				.on('error', function(e) { throw e; });
 });
 
-gulp.task("test", ["mocha", "karma"]);//, "protractor"]);
+gulp.task("test", ["mocha", "karma", "protractor"]);
 
 //CHEQUEAR CODIGO
 gulp.task('lint', function() {
@@ -75,4 +75,4 @@ gulp.task('lint', function() {
 });
 
 //esto corre Travis definido en .travis.yml
-gulp.task("default", ["lint","test"]);
+gulp.task("default", ["lint","protractor"]);
