@@ -4,8 +4,8 @@ var gulpSequence = require("gulp-sequence");
 var Server = require('karma').Server;
 var mocha = require('gulp-mocha');
 var protractor = require("gulp-protractor").protractor;
-
-gulp.task('default', function () { console.log('Hello Gulp!') });
+var jshint = require('gulp-jshint');
+var expressServer = require('gulp-express');
 
 function injectDep(pathToDep, tag){
 	var elements = gulp.src(pathToDep);
@@ -15,7 +15,7 @@ function injectDep(pathToDep, tag){
     	endtag: '<!-- endinject -->',
 		ignorePath: "public",
 		addRootSlash : true
-	})).pipe(gulp.dest("views"))
+	})).pipe(gulp.dest("views"));
 }
 
 gulp.task('addFactoriesDep', function(){
@@ -49,9 +49,43 @@ gulp.task('protractor',function(){
 	return gulp.src(["tests/e2e/*.js"])
 				.pipe(protractor({
 				    configFile: "protractor.conf.js",
-				    args: ['--baseUrl', 'http://127.0.0.1:8000']
+				    args: ['--baseUrl', 'http://127.0.0.1:3000']
 				}))
-				.on('error', function(e) { throw e })
+				.on('error', function(e) { throw e; });
 });
 
-gulp.task("test", ["mocha", "karma", "protractor"]);
+gulp.task('serverStart', function () {
+    // Start the server at the beginning of the task 
+    expressServer.run(['./bin/www']);
+});
+
+gulp.task('serverStop', function () {
+    // Start the server at the beginning of the task 
+    expressServer.stop();
+});
+
+gulp.task("protractorConServer", gulpSequence("serverStart","protractor","serverStop"));
+
+gulp.task("test", ["mocha", "karma", "protractorConServer"]);
+
+//CHEQUEAR CODIGO
+gulp.task('lint', function() {
+  return gulp.src([
+  					'gulpfile.js',
+  					'app.js',
+  					'tests/**/*.js',
+  					'routes/*.js',
+  					'public/**/*.js',
+  					'!public/javascripts/*moment.js',//excluyo angular-moment.js y moment.js
+  					'models/*.js'
+  				])
+    .pipe(jshint({
+    				esversion : 6, //reglas: esversion:6 para usar const
+    				asi : true // suprime los warnings por falta de ";"
+    			})
+    	)
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
+//esto corre Travis definido en .travis.yml
+gulp.task("default",["lint",'test']);

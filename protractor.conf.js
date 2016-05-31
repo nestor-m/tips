@@ -7,5 +7,9 @@ exports.config = {
   seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-2.52.0.jar',
   // seleniumAddress: 'http://localhost:4444/wd/hub',
 
-  specs: ['tests/e2e/ideas.protractor.js']
+  specs: ['tests/e2e/ideas.protractor.js'],
+
+  capabilities: {
+    browserName: 'firefox'
+  }
 };

@@ -5,6 +5,30 @@ var expect = require("chai").expect();
 var protractor = require("protractor");
 
 
+describe("Registro", function() {
+    it ("Registro correcto", function(done) {
+        browser.get("http://localhost:3000");
+        element(by.linkText("Register")).click();
+
+        element(by.model("usuario.usuario")).sendKeys("docente");
+        element(by.model("usuario.password")).sendKeys("docente");
+        element(by.model("usuario.rol")).sendKeys("docente");
+        element(by.buttonText("Registrar")).click();
+
+         element(by.binding("currentUser().usuario")).getText().then(function(value) {
+            value.should.be.equal("docente");
+            done();
+        })
+    });
+
+    after(function(done){
+        element(by.linkText("Log Out")).click();
+        done();
+    });
+
+});
+
+
 describe("pagina para loguearse", function() {
     it ("debe loguearse correctamente", function(done) {
         browser.get("http://localhost:3000");
