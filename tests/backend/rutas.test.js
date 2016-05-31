@@ -32,6 +32,10 @@ describe("router Ideas", function() {
 		mockgoose.reset(done);
 	});
 
+	after(function(done){
+		mongoose.disconnect(done);
+	});
+
 	describe("registro del usuario al sistema", function(){
 		describe("POST /registro", function(){
 			it("debe registrar a un usuario anadiendolo a la bbdd", function(done){
