@@ -10,22 +10,26 @@
   "dependencies": {
     "angular": "angularjs#^1.5.5",
     "bootstrap": "^3.3.6",
-    "angular-ui-router": "^0.3.0"
+    "angular-ui-router": "^0.3.0",
+    "angular-bootstrap": "^1.3.3"
   },
   "devDependencies": {
     "karma": "^0.4.6",
     "mocha": "^2.5.3",
     "protractor": "^3.3.0"
   },
-  "overrides" : {
+  "overrides": {
     "bootstrap": {
-      "main" : "dist/css/**/*min.css"
+      "main": "dist/css/**/*min.css"
     },
     "angular": {
-      "main" : "angular.min.js"
+      "main": "angular.min.js"
     },
     "angular-ui-router": {
-      "main" : "release/angular-ui-router.min.js"
+      "main": "release/angular-ui-router.min.js"
+    },
+    "angular-bootstrap": {
+      "main": "ui-bootstrap-tpls.min.js"
     }
   }
 }
