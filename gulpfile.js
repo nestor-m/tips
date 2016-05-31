@@ -87,4 +87,4 @@ gulp.task('serverStop', function () {
 });
 
 //esto corre Travis definido en .travis.yml
-gulp.task("default", gulpSequence("server","protractor","serverStop"));
+gulp.task("default", gulpSequence("serverStart","protractor","serverStop"));
