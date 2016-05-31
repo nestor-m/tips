@@ -54,7 +54,19 @@ gulp.task('protractor',function(){
 				.on('error', function(e) { throw e; });
 });
 
-gulp.task("test", ["mocha", "karma", "protractor"]);
+gulp.task('serverStart', function () {
+    // Start the server at the beginning of the task 
+    expressServer.run(['./bin/www']);
+});
+
+gulp.task('serverStop', function () {
+    // Start the server at the beginning of the task 
+    expressServer.stop();
+});
+
+gulp.task("protractorConServer", gulpSequence("serverStart","protractor","serverStop"));
+
+gulp.task("test", ["mocha", "karma", "protractorConServer"]);
 
 //CHEQUEAR CODIGO
 gulp.task('lint', function() {
@@ -75,16 +87,5 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-
-gulp.task('serverStart', function () {
-    // Start the server at the beginning of the task 
-    expressServer.run(['./bin/www']);
-});
-
-gulp.task('serverStop', function () {
-    // Start the server at the beginning of the task 
-    expressServer.stop();
-});
-
 //esto corre Travis definido en .travis.yml
-gulp.task("default", gulpSequence("serverStart","protractor","serverStop"));
+gulp.task("default",["lint",'test']);

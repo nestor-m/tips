@@ -8,9 +8,10 @@ var Idea = require("../../models/Ideas.js");
 describe('propiedad Idea del modelo', function(){
 
 	before(function(done){
+		this.timeout(5000);//por default tiene 2000, lo aumento para que no tire timeout con mongoose.connect
 		mockgoose(mongoose).then(function(){
 			mongoose.connect("mongodb://localhost/testingIdeas");
-			done();
+  			done();
 		})
 	});
 
