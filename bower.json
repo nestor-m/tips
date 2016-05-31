@@ -11,5 +11,21 @@
     "angular": "angularjs#^1.5.5",
     "bootstrap": "^3.3.6",
     "angular-ui-router": "^0.3.0"
+  },
+  "devDependencies": {
+    "karma": "^0.4.6",
+    "mocha": "^2.5.3",
+    "protractor": "^3.3.0"
+  },
+  "overrides" : {
+    "bootstrap": {
+      "main" : "dist/css/**/*min.css"
+    },
+    "angular": {
+      "main" : "angular.min.js"
+    },
+    "angular-ui-router": {
+      "main" : "release/angular-ui-router.min.js"
+    }
   }
 }
