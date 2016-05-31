@@ -15,6 +15,5 @@ before_script:
   - sleep 3
   - bower install
   - npm install -g gulp
-  - npm start
   - sleep 3
 script: gulp

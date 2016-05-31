@@ -5,6 +5,7 @@ var Server = require('karma').Server;
 var mocha = require('gulp-mocha');
 var protractor = require("gulp-protractor").protractor;
 var jshint = require('gulp-jshint');
+var expressServer = require('gulp-express');
 
 function injectDep(pathToDep, tag){
 	var elements = gulp.src(pathToDep);
@@ -74,5 +75,16 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
+
+gulp.task('serverStart', function () {
+    // Start the server at the beginning of the task 
+    expressServer.run(['./bin/www']);
+});
+
+gulp.task('serverStop', function () {
+    // Start the server at the beginning of the task 
+    expressServer.stop();
+});
+
 //esto corre Travis definido en .travis.yml
-gulp.task("default", ["lint","protractor"]);
+gulp.task("default", gulpSequence("server","protractor","serverStop"));
