@@ -28,6 +28,7 @@
     "angular-mocks": "~1.5.5",
     "chai": "~3.5.0",
     "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
     "gulp-inject": "^4.1.0",
     "gulp-pipe": "^1.0.4",
     "karma": "~0.13.22",

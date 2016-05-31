@@ -5,6 +5,7 @@ var Server = require('karma').Server;
 var mocha = require('gulp-mocha');
 var protractor = require("gulp-protractor").protractor;
 var mainBowerFiles = require("gulp-main-bower-files");
+var concat = require('gulp-concat');
 
 gulp.task('default', function () { console.log('Hello Gulp!') });
 
@@ -33,7 +34,16 @@ gulp.task('addInternalDep', function(){
 	return injectDep("internal", elements);
 });
 
+
+gulp.task('includeNewDep', function () {
+   gulp.watch('bower.json', ['addInternalDep']);
+});
+
 gulp.task("addAllDep", gulpSequence("addFactoriesDep", "addControllersDep", "addInternalDep"));
+
+
+
+
 
 
 
