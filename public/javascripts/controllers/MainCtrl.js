@@ -1,6 +1,6 @@
 var app = angular.module('ideasTIP');
 
-app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '$modal','materiasFactory', function($timeout,$scope,ideasFactory,authFactory,$modal,materiasFactory)
+app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '$uibModal','materiasFactory', function($timeout,$scope,ideasFactory,authFactory,$uibModal,materiasFactory)
 { 
 
   $scope.mostrarMensajePostulacionExitosa = false;
@@ -50,7 +50,7 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
   $scope.abrirDetalles = function(idea){
     console.log('titulo: ', idea.titulo);
     console.log('descripcion: ', idea.descripcion);
-    $scope.modalInstance= $modal.open({
+    $scope.modalInstance= $uibModal.open({
       templateUrl: 'partials/detallesModal.html',
       scope: $scope,
       controller: 'detallesCTRL',
@@ -71,7 +71,7 @@ app.controller('MainCtrl', ['$timeout','$scope','ideasFactory', 'authFactory', '
   // };
 
   $scope.verTareasPendientes = function(){
-    $scope.modalInstance= $modal.open({
+    $scope.modalInstance= $uibModal.open({
       templateUrl: 'partials/tareasPendientesModal.html',
       scope: $scope,
       controller: 'tareasPendientesCTRL'

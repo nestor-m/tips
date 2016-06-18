@@ -1,13 +1,13 @@
 var app = angular.module('ideasTIP');
 
-app.controller('NavCtrl', ['$scope', 'authFactory', '$modal', '$state' ,function($scope, authFactory, $modal, $state)
+app.controller('NavCtrl', ['$scope', 'authFactory', '$uibModal', '$state' ,function($scope, authFactory, $uibModal, $state)
 {
   $scope.isLoggedIn = authFactory.isLoggedIn;
   $scope.currentUser = authFactory.currentUser;
   $scope.logOut = authFactory.logOut;
 
   $scope.verActividades = function(){
-    $scope.modalInstance= $modal.open({
+    $scope.modalInstance= $uibModal.open({
       templateUrl: 'partials/actividadesModal.html',
       scope: $scope,
       controller: 'actividadesCTRL'

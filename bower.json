@@ -8,29 +8,9 @@
   "license": "MIT",
   "homepage": "https://github.com/nestor-m/tips",
   "dependencies": {
-    "angular": "angularjs#^1.5.5",
-    "bootstrap": "^3.3.6",
-    "angular-ui-router": "^0.3.0",
     "angular-bootstrap": "^1.3.3",
-    "brnfckr": "^0.1.1"
-  },
-  "devDependencies": {
-    "karma": "^0.4.6",
-    "mocha": "^2.5.3",
-    "protractor": "^3.3.0"
-  },
-  "overrides": {
-    "bootstrap": {
-      "main": "dist/css/**/*min.css"
-    },
-    "angular": {
-      "main": "angular.min.js"
-    },
-    "angular-ui-router": {
-      "main": "release/angular-ui-router.min.js"
-    },
-    "angular-bootstrap": {
-      "main": "ui-bootstrap-tpls.min.js"
-    }
+    "angular": "^1.5.7",
+    "bootstrap": "^3.3.6",
+    "angular-ui-router": "^0.3.1"
   }
 }

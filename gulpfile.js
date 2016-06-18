@@ -6,6 +6,11 @@ var mocha = require('gulp-mocha');
 var protractor = require("gulp-protractor").protractor;
 var jshint = require('gulp-jshint');
 var expressServer = require('gulp-express');
+var mainBowerFiles = require('gulp-main-bower-files');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var uglifycss = require('gulp-uglifycss');
+var concatCss = require('gulp-concat-css');
 
 function injectDep(tag, elements){
 
@@ -27,8 +32,26 @@ gulp.task('addControllersDep', function(){
   return injectDep("controllers", elements);
 });
 
-gulp.task('addInternalDep', function(){
-  var elements = gulp.src("bower.json").pipe(mainBowerFiles())
+gulp.task('minifyAndUglifyDepJS', function(){
+  return gulp.src("bower.json")
+  .pipe(mainBowerFiles("**/*.js"))
+  .pipe(concat('allDepJS.js'))
+  .pipe(uglify().on('error', function(e){ console.log(e); }))
+  .pipe(gulp.dest("public/dependencies"));
+});
+
+gulp.task('minifyAndUglifyDepCSS', function(){
+  return gulp.src("bower_components/**/*.css")
+  //.pipe(mainBowerFiles("**/*.css"))
+  .pipe(concatCss('allDepCSS.css'))
+  .pipe(uglifycss().on('error', function(e){ console.log(e); }))
+  .pipe(gulp.dest("public/dependencies"));
+});
+
+gulp.task("minifyAndUglifyDep", gulpSequence("minifyAndUglifyDepJS", "minifyAndUglifyDepCSS"));
+
+gulp.task('addInternalDep',['minifyAndUglifyDep'], function(){
+  var elements = gulp.src("public/dependencies/**/*.*");
   return injectDep("internal", elements);
 });
 
