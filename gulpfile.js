@@ -110,6 +110,7 @@ gulp.task('lint', function() {
   					'routes/*.js',
   					'public/**/*.js',
   					'!public/javascripts/*moment.js',//excluyo angular-moment.js y moment.js
+            '!public/dependencies/*',//excluyo las dependencias minificadas
   					'models/*.js'
   				])
     .pipe(jshint({

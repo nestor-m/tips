@@ -12,9 +12,9 @@ require('./config/passport');
 
 
 //mongoose.connect('mongodb://localhost/tips');
-//var connectionString = process.env.HEROKU_MONGODB_URI
-//mongoose.connect(connectionString || 'mongodb://localhost/tips');
- mongoose.connect("mongodb://mongo:mongo@ds015478.mlab.com:15478/tips");
+var connectionString = process.env.HEROKU_MONGODB_URI;
+mongoose.connect(connectionString || 'mongodb://localhost/tips');
+//mongoose.connect("mongodb://mongo:mongo@ds015478.mlab.com:15478/tips");
 
 
 var express = require('express');
