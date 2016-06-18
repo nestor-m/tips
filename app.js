@@ -11,7 +11,9 @@ require('./models/Materias');
 require('./config/passport');
 
 
-mongoose.connect('mongodb://localhost/tips');
+//mongoose.connect('mongodb://localhost/tips');
+var connectionString = process.env.HEROKU_MONGODB_URI
+mongoose.connect(connectionString || 'mongodb://localhost/tips');
 
 
 var express = require('express');
