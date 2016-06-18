@@ -10,10 +10,17 @@ before_script:
   - node_modules/protractor/bin/webdriver-manager update --standalone --firefox
   - node_modules/protractor/bin/webdriver-manager start 2>&1 &
   - sleep 3
-  - node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager update --standalone --firefox
-  - node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager start 2>&1 &
-  - sleep 3
   - bower install
   - npm install -g gulp
   - sleep 3
 script: gulp
+
+deploy:
+
+  provider: heroku
+
+  app: tips-pds
+
+  api_key:
+
+    secure: $HEROKU_API_KEY
