@@ -19,7 +19,7 @@ deploy:
 
   provider: heroku
 
-  app: tips-pds
+  app: tips-pds-staging
 
   api_key:
 
