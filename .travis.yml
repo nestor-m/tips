@@ -19,11 +19,8 @@ deploy:
 
   provider: heroku
 
-  app: tips-pds-staging
+  app: tips-pds
 
   api_key:
 
     secure: $HEROKU_API_KEY
-
-  on:
-    branch: dev
