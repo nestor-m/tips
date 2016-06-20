@@ -12,14 +12,10 @@ require('./config/passport');
 
 
 //mongoose.connect('mongodb://localhost/tips');
-//var connectionString = process.env.HEROKU_MONGODB_URI;
-//mongoose.connect(connectionString || 'mongodb://localhost/tips');
+var connectionString = process.env.HEROKU_MONGODB_URI || 'mongodb://localhost/tips';
+mongoose.connect(connectionString);
 //mongoose.connect("mongodb://mongo:mongo@ds015478.mlab.com:15478/tips");
-if(process.env.HEROKU_MONGODB_URI === undefined){
-  mongoose.connect('mongodb://localhost/tips');
-}else{
-  mongoose.connect(process.env.HEROKU_MONGODB_URI.toString());
-}
+
 
 
 var express = require('express');
