@@ -17,9 +17,9 @@ pm2.connect(function() {
 
   pm2.start({
 
-    script    : ‘bin/www’,
+    script    : 'bin/www',
 
-    name      : ‘tips-pds',     // ----> THESE ATTRIBUTES ARE OPTIONAL:
+    name      : 'tips-pds',     // ----> THESE ATTRIBUTES ARE OPTIONAL:
 
     exec_mode : 'cluster',            // ----> https://github.com/Unitech/PM2/blob/master/ADVANCED_README.md#schema
 
