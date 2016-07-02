@@ -24,3 +24,7 @@ deploy:
   api_key:
 
     secure: $HEROKU_API_KEY
+  on:
+  
+    tags: true
+    all_branches: true
