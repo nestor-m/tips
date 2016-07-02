@@ -11,6 +11,32 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var uglifycss = require('gulp-uglifycss');
 var concatCss = require('gulp-concat-css');
+var minimist = require('minimist')
+var conventionalChangelog = require('gulp-conventional-changelog')
+
+//////////////////////////////RELEASES///////////
+
+var options = minimist(process.argv.slice(2));
+
+var bump = require('gulp-bump')
+
+gulp.task('bump-version', function() {
+   if (!options.type && !options.version)
+      throw new Error('You must provide either a --type major/minor/patch or --version x.x.x option')
+   return gulp.src('package.json')
+      .pipe(bump(options).on('error', gutil.log))
+      .pipe(gulp.dest('./'))
+})
+
+var commitConvention = "angular";
+
+gulp.task('changelog', function() {
+  return gulp.src('CHANGELOG.md', { buffer: false })
+    .pipe(conventionalChangelog({ preset: commitConvention }))
+    .pipe(gulp.dest('./'))
+})
+
+//////////////////////////////////////////////
 
 function injectDep(tag, elements){
 
