@@ -11,14 +11,19 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var uglifycss = require('gulp-uglifycss');
 var concatCss = require('gulp-concat-css');
-var minimist = require('minimist')
-var conventionalChangelog = require('gulp-conventional-changelog')
+var minimist = require('minimist');
+var conventionalChangelog = require('gulp-conventional-changelog');
+var git = require('gulp-git');
+var conventionalGithubReleaser = require('conventional-github-releaser');
+var bump = require('gulp-bump')
+var gutil = require('gulp-util');
+var fs = require('fs');
 
 //////////////////////////////RELEASES///////////
 
 var options = minimist(process.argv.slice(2));
 
-var bump = require('gulp-bump')
+
 
 gulp.task('bump-version', function() {
    if (!options.type && !options.version)
@@ -36,6 +41,75 @@ gulp.task('changelog', function() {
     .pipe(gulp.dest('./'))
 })
 
+function getPackageJsonVersion() { 
+    return JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf8')).version 
+}
+
+gulp.task('commit-changes', function() {
+   const version = getPackageJsonVersion()
+   return gulp.src('.')
+      .pipe(git.add())
+      .pipe(git.commit('[Prerelease] Preparing to release ' + version))
+})
+
+function getBranchName(cb) {
+   git.revParse({args: '--abbrev-ref HEAD', cwd: __dirname}, function(err, branch) {
+      if (err) throw new Error('Error while getting currrent branch name', err)
+      cb(branch)
+   })
+}
+
+gulp.task('push-changes', function(cb) {
+   getBranchName(function(branch) {
+      git.push('origin', branch, cb)
+   })
+})
+
+gulp.task('create-new-tag', function(cb) {
+   const version = getPackageJsonVersion();
+    getBranchName(function(branch) {
+        git.tag('v' + version, 'Releasing version: ' + version, function(error) {
+            if (error) { return cb(error) }
+            git.push('origin', branch, {args: '--tags'}, cb)
+        })
+    })
+})
+
+gulp.task('github-release', function(done) {
+   checkReleaseRequirements()
+   conventionalGithubReleaser({
+            type: 'oauth',
+            token: '1f9196c0c0b8875ac9b82e9bb4f1e6fd6f91d445' //process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN
+    }, {
+        preset: commitConvention
+    }, done)
+})
+
+function checkReleaseRequirements() {
+  if (!options.type && !options.version)
+    throw new Error('You must provide either a --type major/minor/patch or --version x.x.x option')
+  if (!process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN)
+    throw new Error('In order create releases in GitHub you must have the env variable CONVENTIONAL_GITHUB_RELEASER_TOKEN set with a token')
+}
+
+gulp.task('release', function(callback) {
+  checkReleaseRequirements()
+  runSequence(
+  'bump-version',
+  'changelog',
+  'commit-changes',
+  'push-changes',
+  'create-new-tag',
+  'github-release',
+    function(error) {
+        if (error) {
+            console.log(error.message);
+        } else {
+            console.log('RELEASE FINISHED SUCCESSFULLY');
+        }
+        callback(error)
+    })
+})
 //////////////////////////////////////////////
 
 function injectDep(tag, elements){
