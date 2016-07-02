@@ -1,3 +1,8 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/nestor-m/tips/compare/v1.0.0...v2.0.0) (2016-07-02)
+
+
+
 <a name="1.0.0"></a>
 # 1.0.0 (2016-07-02)
 

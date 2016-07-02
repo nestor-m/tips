@@ -79,7 +79,7 @@ gulp.task('github-release', function(done) {
    checkReleaseRequirements()
    conventionalGithubReleaser({
             type: 'oauth',
-            token: '1f9196c0c0b8875ac9b82e9bb4f1e6fd6f91d445' //process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN
+            token: process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN //'1f9196c0c0b8875ac9b82e9bb4f1e6fd6f91d445'
     }, {
         preset: commitConvention
     }, done)
@@ -94,7 +94,7 @@ function checkReleaseRequirements() {
 
 gulp.task('release', function(callback) {
   checkReleaseRequirements()
-  runSequence(
+  gulpSequence(
   'bump-version',
   'changelog',
   'commit-changes',
@@ -210,6 +210,7 @@ gulp.task('lint', function() {
   					'routes/*.js',
   					'public/**/*.js',
   					'!public/javascripts/*moment.js',//excluyo angular-moment.js y moment.js
+            '!public/dependencies/*',//excluyo las dependencias minificadas
   					'models/*.js'
   				])
     .pipe(jshint({
